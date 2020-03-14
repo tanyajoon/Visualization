@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
@@ -129,13 +129,15 @@
             data_layer.addListener('click', function (e) { //we can listen for a boundary click and identify boundary based on e.feature.getProperty('boundary_id'); we set when adding boundary to data layer
                 var boundary_id = e.feature.getProperty('boundary_id');
                 var boundary_name = "NOT SET";
+                var boundary_population = "NOT SET"
                 if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].name) boundary_name = my_boundaries[boundary_id].name;
+                if(boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].Population) boundary_population = my_boundaries[boundary_id].Population;
                 if (info_window) {
                     info_window.setMap(null);
                     info_window = null;
                 }
                 info_window = new google.maps.InfoWindow({
-                    content: '<div>You have clicked a boundary: <span style="color:red;">' + boundary_name + '</span></div>',
+                    content: '<div>You have clicked a boundary: <span style="color:red;">' + boundary_name + '</span> The boundary population in millions is <span style="color:blue;">' + boundary_population + '</span> </div>',
                     size: new google.maps.Size(150, 50),
                     position: e.latLng, map: map
                 });
@@ -156,32 +158,61 @@
             });
         }
 
-        function loadBoundariesFromGeoJson(geo_json_url) {
-            initializeDataLayer();
-            $.getJSON(geo_json_url, function (data) {
-                if (data.type == "FeatureCollection") { //we have a collection of boundaries in geojson format
-                    if (data.features) {
-                        for (var i = 0; i < data.features.length; i++) {
-                            var boundary_id = i + 1;
-                            var new_boundary = {};
-                            if (!data.features[i].properties) data.features[i].properties = {};
-                            data.features[i].properties.boundary_id = boundary_id; //we will use this id to identify boundary later when clicking on it
-                            data_layer.addGeoJson(data.features[i], { idPropertyName: 'boundary_id' });
-                            new_boundary.feature = data_layer.getFeatureById(boundary_id);
-                            if (data.features[i].properties.name) new_boundary.name = data.features[i].properties.name;
-                            if (data.features[i].properties.NAME) new_boundary.name = data.features[i].properties.NAME;
-                            my_boundaries[boundary_id] = new_boundary;
-                        }
-                    }
-                    if (my_boundaries[24]) { //just an example, that you can change styles of individual boundary
-                        data_layer.overrideStyle(my_boundaries[24].feature, {
-                            fillColor: '#0000FF',
-                            fillOpacity: 0.9
-                        });
-                    }
+function loadBoundariesFromGeoJson(geo_json_url){
+    initializeDataLayer();
+    $.getJSON(geo_json_url, function(data){
+        if(data.type == "FeatureCollection"){ //we have a collection of boundaries in geojson format
+            if(data.features){
+                for(var i = 0; i < data.features.length; i++){
+                    var boundary_id = i + 1;
+                    var new_boundary = {};
+                    if(!data.features[i].properties) data.features[i].properties = {}; 
+                    data.features[i].properties.boundary_id = boundary_id; //we will use this id to identify boundary later when clicking on it
+                    data_layer.addGeoJson(data.features[i], {idPropertyName: 'boundary_id'});
+                    new_boundary.feature = data_layer.getFeatureById(boundary_id);
+                    if(data.features[i].properties.name) new_boundary.name = data.features[i].properties.name;
+                    if(data.features[i].properties.Country) new_boundary.Country = data.features[i].properties.Country;
+                    if(data.features[i].properties.Region) new_boundary.Region = data.features[i].properties.Region;
+                    if(data.features[i].properties["Population (millions)"]) new_boundary.Population = data.features[i].properties["Population (millions)"];
+                    if(data.features[i].properties.HDI) new_boundary.HDI = data.features[i].properties.HDI;
+                    if(data.features[i].properties["GDP per Capita"]) new_boundary.GDP_per_Capita = data.features[i].properties["GDP per Capita"];
+                    if(data.features[i].properties["Cropland Footprint"]) new_boundary.Cropland_Footprint = data.features[i].properties["Cropland Footprint"];
+                    if(data.features[i].properties["Grazing Footprint"]) new_boundary.Grazing_Footprint = data.features[i].properties["Grazing Footprint"];
+                    if(data.features[i].properties["Forest Footprint"]) new_boundary.Forest_Footprint = data.features[i].properties["Forest Footprint"];
+                    if(data.features[i].properties["Carbon Footprint"]) new_boundary.Carbon_Footprint = data.features[i].properties["Carbon Footprint"];
+                    if(data.features[i].properties["Fish Footprint"]) new_boundary.Fish_Footprint = data.features[i].properties["Fish Footprint"];
+                    if(data.features[i].properties["Total Ecological Footprint"]) new_boundary.Total_Ecological_Footprint = data.features[i].properties["Total Ecological Footprint"];
+                    if(data.features[i].properties.Cropland) new_boundary.Cropland = data.features[i].properties.Cropland;
+                    if(data.features[i].properties["Grazing Land"]) new_boundary.Grazing_Land = data.features[i].properties["Grazing Land"];
+                    if(data.features[i].properties["Forest Land"]) new_boundary.Forest_Land = data.features[i].properties["Forest Land"];
+                    if(data.features[i].properties["Fishing Water"]) new_boundary.Fishing_Water = data.features[i].properties["Fishing Water"];
+                    if(data.features[i].properties["Urban Land"]) new_boundary.Urban_Land = data.features[i].properties["Urban Land"];
+                    if(data.features[i].properties["Total Biocapacity"]) new_boundary.Total_Biocapacity = data.features[i].properties["Total Biocapacity"];
+                    if(data.features[i].properties["Biocapacity Deficit or Reserve"]) new_boundary.Biocapacity_Deficit_or_Reserve = data.features[i].properties["Biocapacity Deficit or Reserve"];
+
+                    if(data.features[i].properties["Countries Required"]) new_boundary.Countries_Required = data.features[i].properties["Countries Required"];
+                    if(data.features[i].properties["Data Quality"]) new_boundary.Data_Quality = data.features[i].properties["Data Quality"];
+
+
+
+            
+            
+            
+
+
+                    if(data.features[i].properties.NAME) new_boundary.name = data.features[i].properties.NAME;
+                    my_boundaries[boundary_id] = new_boundary;
                 }
-            });
+            }
+            if(my_boundaries[24]){ //just an example, that you can change styles of individual boundary
+                data_layer.overrideStyle(my_boundaries[24].feature, {
+                    fillColor: '#0000FF',
+                    fillOpacity: 0.9
+                });
+            }
         }
+    });
+  }
 
     function openNav() {
         document.getElementById("side_panel").style.width = "250px";
