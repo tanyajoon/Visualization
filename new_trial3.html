@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<style type="text/css">
+	html { height: 100% }
+	body { height: 100%; margin: 0px; padding: 0px; background: #222; color: #bbb; }
+	#map_canvas { height:100%; margin-left:300px; }
+	#side_panel { position:absolute; width:280px; height: 100%; overflow:auto; float:left; padding-left:10px; padding-right:10px; }
+</style>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCuqkI3agPnm2_6c1y1YupUxiQ5c8uUnxU"></script>
+<script type="text/javascript">
+ 
+//global variables
+var map;
+ 
+// declare namespace
+var start = {};
+ 
+//function that runs when the page loads
+start.initialize = function() 
+{
+	//center lat/lon
+	var latlng = new google.maps.LatLng(2.8,-187.3);
+ 
+	//map configutations
+	var myOptions = {
+		zoom: 2,
+		center: latlng,
+		mapTypeId: google.maps.MapTypeId.ROADMAP
+	};
+ 	
+	//create the map
+	map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+	// Load GeoJSON.
+	var promise = $.getJSON("https://raw.githubusercontent.com/tanyajoon/Visualization/master/data.geojson"); //same amap.data.loadGeoJson();
+
+	promise.then(function(data){
+		cachedGeoJson = data; //save the geojson in case we want to update its values
+		//console.log(data)
+		map.data.addGeoJson(cachedGeoJson,{idPropertyName:"id"});  
+	});
+	//console.log(promise)
+	//console.log(promise.getAllResponseHeaders.name)
+	//console.log(promise.error.responseText.length)
+	console.log(map.data)
+
+	// Load GeoJSON.
+	//var promise = map.data.loadGeoJson("https://raw.githubusercontent.com/tanyajoon/Visualization/master/data.geojson");
+//
+//	//data = map.data.addGeoJson(promise)
+//
+	//console.log(promise)
+
+	//var infowindow = new google.maps.InfoWindow();
+}
+//
+//map.data.loadGeoJson("https://raw.githubusercontent.com/tanyajoon/Visualization/master/data.geojson");
+//
+//var infowindow = new google.maps.InfoWindow();
+//
+// When the user clicks, open an infowindow
+//map.data.addListener('click', function(event) {
+//	var myHTML = event.feature.getProperty("description");
+//	infowindow.setContent("<div style='width:150px;'>"+myHTML+"</div>");
+//	// position the infowindow on the marker
+//	infowindow.setPosition(event.feature.getGeometry().get());
+//	// anchor the infowindow on the marker
+//	infowindow.setOptions({pixelOffset: new google.maps.Size(0,-30)});
+//	infowindow.open(map);
+//});
+ 
+</script>
+</head>
+<!-- body of the page with an onload to run the initialize function -->
+<body onload="start.initialize()">
+ 
+<!-- side panel div container -->
+<div id="side_panel">
+	<h1>Visualization</h1>
+</div>
+<div id="map_canvas"></div>
+</body>
+</html>
