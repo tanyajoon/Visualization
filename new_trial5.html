@@ -1,0 +1,338 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style type="text/css">
+        html {
+            height: 100%
+        }
+
+        body {
+            height: 100%;
+            margin: 0px;
+            padding: 0px;
+            background: #222;
+            color: #bbb;
+        }
+
+        #map_canvas {
+            height: 100%;
+            margin-left: 0px;
+            transition: margin-left .5s;
+            padding: 20px;
+        }
+
+
+        .sidenav {
+        height: 100%; /* 100% Full-height */
+        width: 0; /* 0 width - change this with JavaScript */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Stay on top */
+        top: 0; /* Stay at the top */
+        left: 0;
+        background-color: #111; /* Black*/
+        overflow-x: hidden; /* Disable horizontal scroll */
+        padding-top: 60px; /* Place content 60px from the top */
+        transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+        }
+
+        /* The navigation menu links */
+        .sidenav a {
+          padding: 8px 8px 8px 32px;
+          text-decoration: none;
+          font-size: 25px;
+          color: #818181;
+          display: block;
+          transition: 0.3s;
+        }
+
+        /* When you mouse over the navigation links, change their color */
+        .sidenav a:hover {
+          color: #f1f1f1;
+        }
+
+        /* Position and style the close button (top right corner) */
+        .sidenav .closebtn {
+          position: absolute;
+          top: 0;
+          right: 25px;
+          font-size: 36px;
+          margin-left: 50px;
+        }
+
+
+        /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+        @media screen and (max-height: 450px) {
+          .sidenav {padding-top: 15px;}
+          .sidenav a {font-size: 18px;}
+        }
+        div.scroll{ 
+        color: black;
+        width: 300px; 
+        height: 150px; 
+        overflow-x: hidden; 
+        overflow-y: auto;
+        padding: 20px;
+        }
+    </style>
+
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <title>Mini Project</title>
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+        google.load("maps", "3", { other_params: "sensor=false" });
+    </script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCuqkI3agPnm2_6c1y1YupUxiQ5c8uUnxU"></script>
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script type="text/javascript">
+
+        var map = null;
+        var my_boundaries = {};
+        var data_layer;
+        var info_window;
+
+        //initialize map on document ready
+        $(document).ready(function () {
+            var latlng = new google.maps.LatLng({lat: 30, lng: 10}); //you can use any location as center on map startup
+
+            var myOptions = {
+                zoom: 2.7,
+                center: latlng,
+                mapTypeControl: true,
+                mapTypeControlOptions: { style: google.maps.MapTypeControlStyle.DROPDOWN_MENU },
+                navigationControl: true,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+            google.maps.event.addListener(map, 'click', function () {
+                if (info_window) {
+                    info_window.setMap(null);
+                    info_window = null;
+                }
+            });
+
+            $('#boundary_load_select').change(function () {
+                if ($(this).val() == 1) {
+                    loadBoundariesFromGeoJson("https://raw.githubusercontent.com/tanyajoon/Visualization/master/data.geojson");
+                }
+            });
+            loadBoundariesFromGeoJson("https://raw.githubusercontent.com/tanyajoon/Visualization/master/data.geojson");
+        });
+
+        function initializeDataLayer() {
+            if (data_layer) {
+                data_layer.forEach(function (feature) {
+                    data_layer.remove(feature);
+                });
+                data_layer = null;
+            }
+            data_layer = new google.maps.Data({ map: map }); //initialize data layer which contains the boundaries. It's possible to have multiple data layers on one map
+            data_layer.setStyle({ //using set style we can set styles for all boundaries at once
+                fillColor: 'white',
+                strokeWeight: 1,
+                fillOpacity: 0.1
+            });
+            
+
+            data_layer.addListener('click', function (e) { //we can listen for a boundary click and identify boundary based on e.feature.getProperty('boundary_id'); we set when adding boundary to data layer
+                var boundary_id = e.feature.getProperty('boundary_id');
+                var boundary_name = "Unknown";
+                var boundary_population = "Unknown"
+                
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].name) boundary_name = my_boundaries[boundary_id].name;
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].Population) boundary_population = my_boundaries[boundary_id].Population;
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].HDI) boundary_HDI = my_boundaries[boundary_id].HDI;
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].GDP_per_Capita) boundary_GDP_per_Capita = my_boundaries[boundary_id].GDP_per_Capita;
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].Cropland_Footprint) boundary_Cropland_Footprint = my_boundaries[boundary_id].Cropland_Footprint;
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].Grazing_Footprint) boundary_Grazing_Footprint = my_boundaries[boundary_id].Grazing_Footprint;
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].Forest_Footprint) boundary_Forest_Footprint = my_boundaries[boundary_id].Forest_Footprint;
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].Carbon_Footprint) boundary_Carbon_Footprint = my_boundaries[boundary_id].Carbon_Footprint;
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].Fish_Footprint) boundary_Fish_Footprint = my_boundaries[boundary_id].Fish_Footprint;
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].Total_Ecological_Footprint) boundary_Total_Ecological_Footprint = my_boundaries[boundary_id].Total_Ecological_Footprint;
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].Cropland) boundary_Cropland = my_boundaries[boundary_id].Cropland;
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].Grazing_Land) boundary_Grazing_Land = my_boundaries[boundary_id].Grazing_Land;
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].Forest_Land) boundary_Forest_Land = my_boundaries[boundary_id].Forest_Land;
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].Fishing_Water) boundary_Fishing_Water = my_boundaries[boundary_id].Fishing_Water;
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].Urban_Land) boundary_Urban_Land = my_boundaries[boundary_id].Urban_Land;
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].Total_Biocapacity) boundary_Total_Biocapacity = my_boundaries[boundary_id].Total_Biocapacity;             
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].Biocapacity_Deficit_or_Reserve) boundary_Biocapacity_Deficit_or_Reserve = my_boundaries[boundary_id].Biocapacity_Deficit_or_Reserve;
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].Countries_Required) boundary_Countries_Required = my_boundaries[boundary_id].Countries_Required;
+
+                if (info_window) {
+                    info_window.setMap(null);
+                    info_window = null;
+                }
+                var contentString =
+                '<div id="content" class="scroll">'+ '<table>' +'<tr>'+ '<td>' + 'Country clicked:' +'</td>' +'<td>' +  boundary_name + '</td>' +'</tr>'+
+                    '<tr>' + '<td>' + 'Population in millions:' + '</td>' + '<td>' + boundary_population + '</td>' + '</tr>' +
+                    '<tr>' + '<td>' + 'HDI:' + '</td>' + '<td>' + boundary_HDI + '</td>' + '</tr>' +
+                    '<tr>' + '<td>' + 'GDP per Capita:' + '</td>' + '<td>' + boundary_GDP_per_Capita + '</td>' + '</tr>' +
+                    '<tr>' + '<td>' + 'Cropland Footprint:' + '</td>' + '<td>' + boundary_Cropland_Footprint + '</td>' + '</tr>' +
+                    '<tr>' + '<td>' + 'Grazing Footprint:' + '</td>' + '<td>' + boundary_Grazing_Footprint + '</td>' + '</tr>' +
+                    '<tr>' + '<td>' + 'Forest Footprint:' + '</td>' + '<td>' + boundary_Forest_Footprint + '</td>' + '</tr>' +
+                    '<tr>' + '<td>' + 'Carbon Footprint:' + '</td>' + '<td>' + boundary_Carbon_Footprint + '</td>' + '</tr>' +
+                    '<tr>' + '<td>' + 'Fish Footprint:' + '</td>' + '<td>' + boundary_Fish_Footprint + '</td>' + '</tr>' +
+                    '<tr>' + '<td>' + 'Total Ecological Footprint:' + '</td>' + '<td>' + boundary_Total_Ecological_Footprint + '</td>' + '</tr>' +
+                    '<tr>' + '<td>' + 'Cropland:' + '</td>' + '<td>' + boundary_Cropland + '</td>' + '</tr>' +
+                    '<tr>' + '<td>' + 'Grazing Land:' + '</td>' + '<td>' + boundary_Grazing_Land + '</td>' + '</tr>' +
+                    '<tr>' + '<td>' + 'Forest Land:' + '</td>' + '<td>' + boundary_Forest_Land + '</td>' + '</tr>' +
+                    '<tr>' + '<td>' + 'Fishing Water:' + '</td>' + '<td>' + boundary_Fishing_Water + '</td>' + '</tr>' +
+                    '<tr>' + '<td>' + 'Urban Land   :' + '</td>' + '<td>' + boundary_Urban_Land + '</td>' + '</tr>' +
+                    '<tr>' + '<td>' + 'Total Biocapacity:' + '</td>' + '<td>' + boundary_Total_Biocapacity + '</td>' + '</tr>' +
+                    '<tr>' + '<td>' + 'Biocapacity Deficit or Reserve:' + '</td>' + '<td>' + boundary_Biocapacity_Deficit_or_Reserve + '</td>' + '</tr>' +
+                    '<tr>' + '<td>' + 'Countries Required:' + '</td>' + '<td>' + boundary_Countries_Required + '</td>' + '</tr>' +
+
+                    '</table>' + '</div>';
+
+                info_window = new google.maps.InfoWindow({
+                    size: new google.maps.Size(150, 50),
+                    position: e.latLng, map: map,
+                    content: contentString
+
+    });
+});
+
+            data_layer.addListener('mouseover', function (e) {
+                data_layer.overrideStyle(e.feature, {
+                    strokeWeight: 3,
+                    strokeColor: '#ff0000'
+                });
+            });
+
+            data_layer.addListener('mouseout', function (e) {
+                data_layer.overrideStyle(e.feature, {
+                    strokeWeight: 1,
+                    strokeColor: 'black'
+                });
+            });
+        }
+
+function loadBoundariesFromGeoJson(geo_json_url){
+    initializeDataLayer();
+    $.getJSON(geo_json_url, function(data){
+        if(data.type == "FeatureCollection"){ //we have a collection of boundaries in geojson format
+            if(data.features){
+                for(var i = 0; i < data.features.length; i++){
+                    var boundary_id = i + 1;
+                    var new_boundary = {};
+                    if(!data.features[i].properties) data.features[i].properties = {}; 
+                    data.features[i].properties.boundary_id = boundary_id; //we will use this id to identify boundary later when clicking on it
+                    data_layer.addGeoJson(data.features[i], {idPropertyName: 'boundary_id'});
+                    new_boundary.feature = data_layer.getFeatureById(boundary_id);
+                    if(data.features[i].properties.name) new_boundary.name = data.features[i].properties.name;
+                    if(data.features[i].properties.Country) new_boundary.Country = data.features[i].properties.Country;
+                    if(data.features[i].properties.Region) new_boundary.Region = data.features[i].properties.Region;
+                    if(data.features[i].properties["Population (millions)"]) new_boundary.Population = data.features[i].properties["Population (millions)"];
+                    if(data.features[i].properties.HDI) new_boundary.HDI = data.features[i].properties.HDI;
+                    if(data.features[i].properties["GDP per Capita"]) new_boundary.GDP_per_Capita = data.features[i].properties["GDP per Capita"];
+                    if(data.features[i].properties["Cropland Footprint"]) new_boundary.Cropland_Footprint = data.features[i].properties["Cropland Footprint"];
+                    if(data.features[i].properties["Grazing Footprint"]) new_boundary.Grazing_Footprint = data.features[i].properties["Grazing Footprint"];
+                    if(data.features[i].properties["Forest Footprint"]) new_boundary.Forest_Footprint = data.features[i].properties["Forest Footprint"];
+                    if(data.features[i].properties["Carbon Footprint"]) new_boundary.Carbon_Footprint = data.features[i].properties["Carbon Footprint"];
+                    if(data.features[i].properties["Fish Footprint"]) new_boundary.Fish_Footprint = data.features[i].properties["Fish Footprint"];
+                    if(data.features[i].properties["Total Ecological Footprint"]) new_boundary.Total_Ecological_Footprint = data.features[i].properties["Total Ecological Footprint"];
+                    if(data.features[i].properties.Cropland) new_boundary.Cropland = data.features[i].properties.Cropland;
+                    if(data.features[i].properties["Grazing Land"]) new_boundary.Grazing_Land = data.features[i].properties["Grazing Land"];
+                    if(data.features[i].properties["Forest Land"]) new_boundary.Forest_Land = data.features[i].properties["Forest Land"];
+                    if(data.features[i].properties["Fishing Water"]) new_boundary.Fishing_Water = data.features[i].properties["Fishing Water"];
+                    if(data.features[i].properties["Urban Land"]) new_boundary.Urban_Land = data.features[i].properties["Urban Land"];
+                    if(data.features[i].properties["Total Biocapacity"]) new_boundary.Total_Biocapacity = data.features[i].properties["Total Biocapacity"];
+                    if(data.features[i].properties["Biocapacity Deficit or Reserve"]) new_boundary.Biocapacity_Deficit_or_Reserve = data.features[i].properties["Biocapacity Deficit or Reserve"];
+
+                    if(data.features[i].properties["Countries Required"]) new_boundary.Countries_Required = data.features[i].properties["Countries Required"];
+                    if(data.features[i].properties["Data Quality"]) new_boundary.Data_Quality = data.features[i].properties["Data Quality"];
+
+
+
+            
+            
+            
+
+
+                    if(data.features[i].properties.NAME) new_boundary.name = data.features[i].properties.NAME;
+                    my_boundaries[boundary_id] = new_boundary;
+                }
+            }
+        }
+    });
+  }
+
+    function openNav() {
+        document.getElementById("side_panel").style.width = "250px";
+        document.getElementById("map_canvas").style.marginLeft = "250px";
+    }
+
+    /* Set the width of the side navigation to 0 */
+    function closeNav() {
+        document.getElementById("side_panel").style.width = "0";
+        document.getElementById("map_canvas").style.marginLeft = "0px";
+    }
+
+    function maxPopulation()
+    {
+        var arr = [];
+        for(var i in my_boundaries)
+        {
+            arr.push(my_boundaries[i].Population)                       
+        }        
+        maxIndex = indexOfMax(arr)
+        console.log(maxIndex)        
+        data_layer.overrideStyle(my_boundaries[maxIndex].feature, {
+                fillColor: '#0000FF',
+                fillOpacity: 0.9
+            });        
+    }
+
+    function indexOfMax(arr) {
+    if (arr.length === 0) {
+        return -1;
+    }
+
+    var max = arr[0];
+    var maxIndex = 0;
+
+    for (var i = 1; i < arr.length; i++) {
+        if (Number(arr[i]) > Number(max)) {
+            maxIndex = i;
+            max = arr[i];
+        }
+    }
+    return maxIndex + 1;
+    }
+
+
+    function clearAll()
+    {
+        data_layer.forEach(function (feature) {
+                    data_layer.remove(feature);
+                });
+        data_layer = null;
+        data_layer = new google.maps.Data({ map: map });
+        loadBoundariesFromGeoJson("https://raw.githubusercontent.com/tanyajoon/Visualization/master/data.geojson");
+    }
+
+        
+
+
+
+    </script>
+</head>
+<body>
+    <div id="side_panel" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+
+        <a href="new_page.html">Other Page</a>
+        <center><H3> Let's Visualize </H3> </center>
+        <div id="popu_btn"><button class="btn btn-primary btn-lg btn-block" onclick="maxPopulation()"> Show the Heighest Population Country</button> </div>
+
+        <button type="button" class="btn btn-primary btn-lg btn-block" onclick="clearAll()">Clear</button>
+
+
+    </div>
+    <div><span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; </span></div>
+    <div id="map_canvas"></div>
+
+</body>
+</html>
