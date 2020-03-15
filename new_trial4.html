@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
@@ -66,11 +66,19 @@
           .sidenav {padding-top: 15px;}
           .sidenav a {font-size: 18px;}
         }
+        div.scroll{ 
+        color: black;
+        width: 300px; 
+        height: 150px; 
+        overflow-x: hidden; 
+        overflow-y: auto;
+        padding: 20px;
+        }
     </style>
 
 
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-    <title>Google Maps JavaScript API v3 Example: Geocoding Simple</title>
+    <title>Mini Project</title>
     <script type="text/javascript" src="http://www.google.com/jsapi"></script>
     <script type="text/javascript">
         google.load("maps", "3", { other_params: "sensor=false" });
@@ -125,23 +133,65 @@
                 strokeWeight: 1,
                 fillOpacity: 0.1
             });
+            
 
             data_layer.addListener('click', function (e) { //we can listen for a boundary click and identify boundary based on e.feature.getProperty('boundary_id'); we set when adding boundary to data layer
                 var boundary_id = e.feature.getProperty('boundary_id');
-                var boundary_name = "NOT SET";
-                var boundary_population = "NOT SET"
+                var boundary_name = "Unknown";
+                var boundary_population = "Unknown"
+                
                 if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].name) boundary_name = my_boundaries[boundary_id].name;
-                if(boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].Population) boundary_population = my_boundaries[boundary_id].Population;
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].Population) boundary_population = my_boundaries[boundary_id].Population;
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].HDI) boundary_HDI = my_boundaries[boundary_id].HDI;
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].GDP_per_Capita) boundary_GDP_per_Capita = my_boundaries[boundary_id].GDP_per_Capita;
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].Cropland_Footprint) boundary_Cropland_Footprint = my_boundaries[boundary_id].Cropland_Footprint;
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].Grazing_Footprint) boundary_Grazing_Footprint = my_boundaries[boundary_id].Grazing_Footprint;
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].Forest_Footprint) boundary_Forest_Footprint = my_boundaries[boundary_id].Forest_Footprint;
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].Carbon_Footprint) boundary_Carbon_Footprint = my_boundaries[boundary_id].Carbon_Footprint;
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].Fish_Footprint) boundary_Fish_Footprint = my_boundaries[boundary_id].Fish_Footprint;
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].Total_Ecological_Footprint) boundary_Total_Ecological_Footprint = my_boundaries[boundary_id].Total_Ecological_Footprint;
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].Cropland) boundary_Cropland = my_boundaries[boundary_id].Cropland;
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].Grazing_Land) boundary_Grazing_Land = my_boundaries[boundary_id].Grazing_Land;
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].Forest_Land) boundary_Forest_Land = my_boundaries[boundary_id].Forest_Land;
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].Fishing_Water) boundary_Fishing_Water = my_boundaries[boundary_id].Fishing_Water;
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].Urban_Land) boundary_Urban_Land = my_boundaries[boundary_id].Urban_Land;
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].Total_Biocapacity) boundary_Total_Biocapacity = my_boundaries[boundary_id].Total_Biocapacity;             
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].Biocapacity_Deficit_or_Reserve) boundary_Biocapacity_Deficit_or_Reserve = my_boundaries[boundary_id].Biocapacity_Deficit_or_Reserve;
+                if (boundary_id && my_boundaries[boundary_id] && my_boundaries[boundary_id].Countries_Required) boundary_Countries_Required = my_boundaries[boundary_id].Countries_Required;
+
                 if (info_window) {
                     info_window.setMap(null);
                     info_window = null;
                 }
+                var contentString =
+                '<div id="content" class="scroll">'+ '<table>' +'<tr>'+ '<td>' + 'Country clicked:' +'</td>' +'<td>' +  boundary_name + '</td>' +'</tr>'+
+                    '<tr>' + '<td>' + 'Population in millions:' + '</td>' + '<td>' + boundary_population + '</td>' + '</tr>' +
+                    '<tr>' + '<td>' + 'HDI:' + '</td>' + '<td>' + boundary_HDI + '</td>' + '</tr>' +
+                    '<tr>' + '<td>' + 'GDP per Capita:' + '</td>' + '<td>' + boundary_GDP_per_Capita + '</td>' + '</tr>' +
+                    '<tr>' + '<td>' + 'Cropland Footprint:' + '</td>' + '<td>' + boundary_Cropland_Footprint + '</td>' + '</tr>' +
+                    '<tr>' + '<td>' + 'Grazing Footprint:' + '</td>' + '<td>' + boundary_Grazing_Footprint + '</td>' + '</tr>' +
+                    '<tr>' + '<td>' + 'Forest Footprint:' + '</td>' + '<td>' + boundary_Forest_Footprint + '</td>' + '</tr>' +
+                    '<tr>' + '<td>' + 'Carbon Footprint:' + '</td>' + '<td>' + boundary_Carbon_Footprint + '</td>' + '</tr>' +
+                    '<tr>' + '<td>' + 'Fish Footprint:' + '</td>' + '<td>' + boundary_Fish_Footprint + '</td>' + '</tr>' +
+                    '<tr>' + '<td>' + 'Total Ecological Footprint:' + '</td>' + '<td>' + boundary_Total_Ecological_Footprint + '</td>' + '</tr>' +
+                    '<tr>' + '<td>' + 'Cropland:' + '</td>' + '<td>' + boundary_Cropland + '</td>' + '</tr>' +
+                    '<tr>' + '<td>' + 'Grazing Land:' + '</td>' + '<td>' + boundary_Grazing_Land + '</td>' + '</tr>' +
+                    '<tr>' + '<td>' + 'Forest Land:' + '</td>' + '<td>' + boundary_Forest_Land + '</td>' + '</tr>' +
+                    '<tr>' + '<td>' + 'Fishing Water:' + '</td>' + '<td>' + boundary_Fishing_Water + '</td>' + '</tr>' +
+                    '<tr>' + '<td>' + 'Urban Land	:' + '</td>' + '<td>' + boundary_Urban_Land + '</td>' + '</tr>' +
+                    '<tr>' + '<td>' + 'Total Biocapacity:' + '</td>' + '<td>' + boundary_Total_Biocapacity + '</td>' + '</tr>' +
+                    '<tr>' + '<td>' + 'Biocapacity Deficit or Reserve:' + '</td>' + '<td>' + boundary_Biocapacity_Deficit_or_Reserve + '</td>' + '</tr>' +
+                    '<tr>' + '<td>' + 'Countries Required:' + '</td>' + '<td>' + boundary_Countries_Required + '</td>' + '</tr>' +
+
+                    '</table>' + '</div>';
+
                 info_window = new google.maps.InfoWindow({
-                    content: '<div>You have clicked a boundary: <span style="color:red;">' + boundary_name + '</span> The boundary population in millions is <span style="color:blue;">' + boundary_population + '</span> </div>',
                     size: new google.maps.Size(150, 50),
-                    position: e.latLng, map: map
-                });
-            });
+                    position: e.latLng, map: map,
+                    content: contentString
+
+    });
+});
 
             data_layer.addListener('mouseover', function (e) {
                 data_layer.overrideStyle(e.feature, {
@@ -204,12 +254,6 @@ function loadBoundariesFromGeoJson(geo_json_url){
                     my_boundaries[boundary_id] = new_boundary;
                 }
             }
-            if(my_boundaries[24]){ //just an example, that you can change styles of individual boundary
-                data_layer.overrideStyle(my_boundaries[24].feature, {
-                    fillColor: '#0000FF',
-                    fillOpacity: 0.9
-                });
-            }
         }
     });
   }
@@ -225,7 +269,7 @@ function loadBoundariesFromGeoJson(geo_json_url){
         document.getElementById("map_canvas").style.marginLeft = "0px";
     }
 
-
+        
 
 
 
