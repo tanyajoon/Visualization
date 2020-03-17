@@ -85,23 +85,62 @@
                 fill: slateblue;
             }
 
-        
+
 
         .axis text {
             font-weight: bold;
         }
+
         div.tooltip {
-  position: absolute;
-  text-align: center;
-  width: 60px;
-  height: 28px;
-  padding: 2px;
-  font: 12px sans-serif;
-  background: lightsteelblue;
-  border: 0px;
-  border-radius: 8px;
-  pointer-events: none;
-}
+            position: absolute;
+            text-align: center;
+            width: 60px;
+            height: 28px;
+            padding: 2px;
+            font: 12px sans-serif;
+            background: lightsteelblue;
+            border: 0px;
+            border-radius: 8px;
+            pointer-events: none;
+        }
+        #legend{
+    overflow:hidden;
+        }
+
+        .key-dot {
+            display: inline-block;
+            border-radius: 50%;
+            height: 10px;
+            margin-right: .5em;
+            width: 10px;
+            border-radius: 10px;
+        }
+
+        .legend {
+
+        float:left;
+        margin-right: 1em;
+        }
+
+        .Middle { background: red;}
+        .Africa { background: orange;}
+        .Asia { background: pink;}
+        .EU { background: blue;}
+        .Latin { background: green;}
+        .North { background: purple;}
+        .Europe{background:yellow; }
+
+        hr {
+          display: block;
+        height: 75px;
+        background-color: lightblue;
+        border: none;
+
+        }
+        .vl {
+          border-left: 150px solid lightblue;
+          height: 500px;
+        }
     </style>
     <script type="text/javascript">
         function openNav() {
@@ -131,15 +170,31 @@
                 d3.select("#third").remove();
                 d3.select("#fourth").remove();
 
-                contenttext =
-                    "<center> <b> <H2>" +
-                    "Do developed countries impact the ecosystem more?" + "</H2></b > " +
-                    "<h3><b>"+"Comment: "+"</b>"+ "After a country reaches HDI of 0.6 score, countries footprint seems to be accelerated"+"</h3></center>";
+                contenttext = '<div style="box-sizing: border-box;  padding-left: 200px; display:block;;">' +               
+                    "<b> <H2><hr>" +
+                    "Do developed countries impact the ecosystem more?"  + "</H2></b > " +
+                    "<h3><b>"+"Comment: "+"</b>"+ "After a country reaches HDI of 0.6 score, countries footprint seems to be accelerated"+"</h3>"+ "</div>";
                 document.getElementById("content").innerHTML = contenttext;
-               
-                //enter all ids of your other graphs
 
-                const svg1= d3.select("svg"),
+   
+                legendtext = "<hr>"+
+
+                    '<div class="legend1" style="box-sizing: border-box;  text-align: right; padding-right: 300px; display:block;;">' +
+                    '            ' +
+                    '                ' +
+                    '                <div class="legend1"> <p class="country-name"><span class="key-dot Middle"></span>"Middle East/Central Asia</p> </div>' +
+                    '                <div class="legend1"> <p class="country-name"><span class="key-dot Africa"></span>Africa</p> </div>' +
+                    '                <div class="legend1"> <p class="country-name"><span class="key-dot Asia"></span>Asia-Pacific</p> </div>' +
+                    '           ' +
+                    '                <div class="legend1"> <p class="country-name"><span class="key-dot EU"></span>European Union</p> </div>' +
+                    '                <div class="legend1"> <p class="country-name"><span class="key-dot Latin"></span>Latin America</p> </div>' +
+                    '                <div class="legend1"> <p class="country-name"><span class="key-dot North"></span>North America</p> </div>' +
+                    '                <div class="legend1"> <p class="country-name"><span class="key-dot Europe"></span>Northern/Eastern Europe</p> </div>' +
+                    '           ' + "</div>";
+                    
+                document.getElementById("legend").innerHTML = legendtext;
+
+                const svg1 = d3.select("svg"),
                     margin = { top: 20, right: 150, bottom: 50, left: 150 },
                     width = +svg1.attr("width") - margin.left - margin.right,
                     height = +svg1.attr("height") - margin.top - margin.bottom,
@@ -147,14 +202,14 @@
                     x = d3.scaleLinear().rangeRound([0, width]),
 
                     y = d3.scaleLinear().rangeRound([height, 0]),
-                    z = d3.scaleLinear().domain([0,1408.04]).range([ 4, 25]) 
+                    z = d3.scaleLinear().domain([0, 1408.04]).range([4, 25])
 
-                   // g2 = svg1.append("svg"),
-                    g1 = svg1.append("g")
-                        .attr("transform", `translate(${margin.left},${margin.top})`)
-                        .attr("id", "first");
+                // g2 = svg1.append("svg"),
+                g1 = svg1.append("g")
+                    .attr("transform", `translate(${margin.left},${margin.top})`)
+                    .attr("id", "first");
 
-                    
+
 
                 d3.json("https://raw.githubusercontent.com/tanyajoon/Visualization/master/csv.json")
                     .then(data => {
@@ -162,12 +217,12 @@
                         y.domain([0, d3.max(data, d => d["Total Ecological Footprint"])]);
                         x.domain([0, d3.max(data, d => d.HDI)]);
 
-                        
+
                         g1.append("g")
                             .attr("class", "axis axis-x")
                             .attr("transform", `translate(0,${height})`)
                             .call(d3.axisBottom(x));
-                            //.text("Total Ecological Footprint");
+                        //.text("Total Ecological Footprint");
 
                         g1.append("g")
                             .attr("class", "axis axis-y")
@@ -183,16 +238,16 @@
                         g1.append("text")
                             .attr("text-anchor", "end")
                             .attr("transform", "rotate(-90)")
-                            .attr("y", -margin.left+100)
+                            .attr("y", -margin.left + 100)
                             .attr("x", (-height / 2))
                             .text("Total Ecological Footprint");
-                            
-                       var div = d3.select("body").append("div") 
-                            .attr("class", "tooltip")               
+
+                        var div = d3.select("body").append("div")
+                            .attr("class", "tooltip")
                             .style("opacity", 0);
 
                         //hd=data.filter(function (d) { return d.HDI !== 0; });
-                        
+
 
                         g1.selectAll(".bar")
                             .data(data)
@@ -200,20 +255,20 @@
                             .attr("class", "bar")
                             .attr("cx", d => x(d.HDI))
                             .attr("cy", d => y(d["Total Ecological Footprint"]))
-                            .attr("r",  d => z(d["Population (millions)"]))
+                            .attr("r", d => z(d["Population (millions)"]))
                             .on('mouseover', function (d, i) {
-                                  d3.select(this).transition()
-                                        .duration('100')
-                                        .attr("r", 10);
-                                  div.transition()
-                                       .duration(100)
+                                d3.select(this).transition()
+                                    .duration('100')
+                                    .attr("r", 10);
+                                div.transition()
+                                    .duration(100)
                                     .style("opacity", 0.7);
-                                
+
                                 var text = d.Country;
-                                  div.html(text)
-                                        .style("left", (d3.event.pageX) + "px")     
-                                        .style("top", (d3.event.pageY - 28) + "px")  
-                                        .attr("fill", "black");
+                                div.html(text)
+                                    .style("left", (d3.event.pageX) + "px")
+                                    .style("top", (d3.event.pageY - 28) + "px")
+                                    .attr("fill", "black");
 
                             })
 
@@ -222,37 +277,37 @@
                                 d3.select(this).transition()
                                     .duration('200')
                                     .attr("r", d => z(d["Population (millions)"]));
-                                       
-                                  div.transition()
-                                       .duration('200')
-                                       .style("opacity", 0);
-                             })
+
+                                div.transition()
+                                    .duration('200')
+                                    .style("opacity", 0);
+                            })
                             //.style("fill", "black")
                             .style("fill", function (d, i) {
 
                                 if (d.Region === "Middle East/Central Asia") {
                                     return "red";
                                 }
-                                
+
                                 else if (d.Region === "Africa") {
                                     return "orange";
                                 }
-                                                                    
+
                                 else if (d.Region === "Asia-Pacific") {
                                     return "pink";
-                                }                                
+                                }
                                 else if (d.Region === "European Union") {
                                     return "blue";
-                                }                                
+                                }
                                 else if (d.Region === "Latin America") {
                                     return "green";
-                                }                                
+                                }
                                 else if (d.Region === "North America") {
                                     return "purple";
-                                }                                
+                                }
                                 else if (d.Region === "Northern/Eastern Europe") {
                                     return "yellow";
-                                }                                
+                                }
 
 
 
@@ -263,7 +318,7 @@
                             });
 
                     })
-                        .catch(err => {
+                    .catch(err => {
                         svg1.append("text")
                             .attr("y", 20)
                             .attr("text-anchor", "left")
@@ -272,22 +327,41 @@
                             .text(`Couldn't open the data file: "${err}".`);
                     });
 
-                
+
             }
-            
+
             if (option === '4') {
                 d3.select("#second").remove();
                 d3.select("#first").remove();
                 d3.select("#third").remove();
-                contenttext =
-                    "<center> <b> <H2>" +
+
+                contenttext = '<div style="box-sizing: border-box;  padding-left: 200px; display:block;;">' +               
+                    "<b> <H2><hr>" +
                     "Do Rich countries impact the ecosystem more?" + "</H2></b > " +
-                    "<h3><b>"+"Comment: "+"</b>"+ "Countries ecological footprint does not seems to be impacted by GDP"+"</h3></center>";
+                    "<h3><b>" + "Comment: " + "</b>" + "Countries ecological footprint does not seems to be impacted by GDP"+"</h3>"+ "</div>";
                 document.getElementById("content").innerHTML = contenttext;
-               
+
+                legendtext = "<hr>"+
+
+                    '<div class="legend1" style="box-sizing: border-box;  text-align: right; padding-right: 300px; display:block;;">' +
+                    '            ' +
+                    '                ' +
+                    '                <div class="legend1"> <p class="country-name"><span class="key-dot Middle"></span>"Middle East/Central Asia</p> </div>' +
+                    '                <div class="legend1"> <p class="country-name"><span class="key-dot Africa"></span>Africa</p> </div>' +
+                    '                <div class="legend1"> <p class="country-name"><span class="key-dot Asia"></span>Asia-Pacific</p> </div>' +
+                    '           ' +
+                    '                <div class="legend1"> <p class="country-name"><span class="key-dot EU"></span>European Union</p> </div>' +
+                    '                <div class="legend1"> <p class="country-name"><span class="key-dot Latin"></span>Latin America</p> </div>' +
+                    '                <div class="legend1"> <p class="country-name"><span class="key-dot North"></span>North America</p> </div>' +
+                    '                <div class="legend1"> <p class="country-name"><span class="key-dot Europe"></span>Northern/Eastern Europe</p> </div>' +
+                    '           ' + "</div>";
+                    
+                document.getElementById("legend").innerHTML = legendtext;
+
+
                 //enter all ids of your other graphs
 
-                const svg1= d3.select("svg"),
+                const svg1 = d3.select("svg"),
                     margin = { top: 20, right: 150, bottom: 50, left: 150 },
                     width = +svg1.attr("width") - margin.left - margin.right,
                     height = +svg1.attr("height") - margin.top - margin.bottom,
@@ -295,7 +369,8 @@
                     x = d3.scaleLinear().rangeRound([0, width]),
 
                     y = d3.scaleLinear().rangeRound([height, 0]),
-                   // g2 = svg1.append("svg"),
+                    z = d3.scaleLinear().domain([0, 1408.04]).range([4, 25])
+                    // g2 = svg1.append("svg"),
                     g1 = svg1.append("g")
                         .attr("transform", `translate(${margin.left},${margin.top})`)
                         .attr("id", "fourth");
@@ -305,18 +380,18 @@
                         data = data;
                         y.domain([0, d3.max(data, d => d["Total Ecological Footprint"])]);
                         x.domain([0, d3.max(data, d => d["GDP per Capita"])]);
-                        
+
 
                         g1.append("g")
                             .attr("class", "axis axis-x")
                             .attr("transform", `translate(0,${height})`)
                             .call(d3.axisBottom(x));
-                            //.text("Total Ecological Footprint");
+                        //.text("Total Ecological Footprint");
 
                         g1.append("g")
                             .attr("class", "axis axis-y")
                             .call(d3.axisLeft(y));
-                         // x axis label:
+                        // x axis label:
                         g1.append("text")
                             .attr("text-anchor", "end")
                             .attr("x", (width / 2))
@@ -327,85 +402,85 @@
                         g1.append("text")
                             .attr("text-anchor", "end")
                             .attr("transform", "rotate(-90)")
-                            .attr("y", -margin.left+100)
+                            .attr("y", -margin.left + 100)
                             .attr("x", (-height / 2))
                             .text("Total Ecological Footprint");
-                            
-                       var div = d3.select("body").append("div") 
-                            .attr("class", "tooltip")               
+
+                        var div = d3.select("body").append("div")
+                            .attr("class", "tooltip")
                             .style("opacity", 0);
 
                         //hd=data.filter(function (d) { return d.HDI !== 0; });
-                        
+
 
                         g1.selectAll(".bar")
                             .data(data)
                             .enter().append("circle")
                             .attr("class", "bar")
                             .attr("cx", d => x(d["GDP per Capita"]))
-                                .attr("cy", d => y(d["Total Ecological Footprint"]))
-                                .attr("r", 3)
-                                .on('mouseover', function (d, i) {
-                                    d3.select(this).transition()
-                                        .duration('100')
-                                        .attr("r", 7);
-                                    div.transition()
-                                        .duration(100)
-                                        .style("opacity", 1);
-                                    var text = d.Country;
-                                    div.html(text)
-                                        .style("left", (d3.event.pageX) + "px")
-                                        .style("top", (d3.event.pageY - 28) + "px")
-                                        .attr("fill", "black");
+                            .attr("cy", d => y(d["Total Ecological Footprint"]))
+                            .attr("r", d => z(d["Population (millions)"]))
+                            .on('mouseover', function (d, i) {
+                                d3.select(this).transition()
+                                    .duration('100')
+                                    .attr("r", 10);
+                                div.transition()
+                                    .duration(100)
+                                    .style("opacity", 1);
+                                var text = d.Country;
+                                div.html(text)
+                                    .style("left", (d3.event.pageX) + "px")
+                                    .style("top", (d3.event.pageY - 28) + "px")
+                                    .attr("fill", "black");
 
-                                })
-
-
-                                .on('mouseout', function (d, i) {
-                                    d3.select(this).transition()
-                                        .duration('200')
-                                        .attr("r", 4);
-                                    div.transition()
-                                        .duration('200')
-                                        .style("opacity", 0);
-                                })
-                                //.style("fill", "black")
-                                .style("fill", function (d, i) {
-
-                                    if (d.Region === "Middle East/Central Asia") {
-                                        return "red";
-                                    }
-
-                                    else if (d.Region === "Africa") {
-                                        return "orange";
-                                    }
-
-                                    else if (d.Region === "Asia-Pacific") {
-                                        return "pink";
-                                    }
-                                    else if (d.Region === "European Union") {
-                                        return "blue";
-                                    }
-                                    else if (d.Region === "Latin America") {
-                                        return "green";
-                                    }
-                                    else if (d.Region === "North America") {
-                                        return "purple";
-                                    }
-                                    else if (d.Region === "Northern/Eastern Europe") {
-                                        return "yellow";
-                                    }
+                            })
 
 
+                            .on('mouseout', function (d, i) {
+                                d3.select(this).transition()
+                                    .duration('200')
+                                    .attr("r", d => z(d["Population (millions)"]))
+                                div.transition()
+                                    .duration('200')
+                                    .style("opacity", 0);
+                            })
+                            //.style("fill", "black")
+                            .style("fill", function (d, i) {
 
-                                    else {
-                                        return "black";
+                                if (d.Region === "Middle East/Central Asia") {
+                                    return "red";
+                                }
 
-                                    }
+                                else if (d.Region === "Africa") {
+                                    return "orange";
+                                }
+
+                                else if (d.Region === "Asia-Pacific") {
+                                    return "pink";
+                                }
+                                else if (d.Region === "European Union") {
+                                    return "blue";
+                                }
+                                else if (d.Region === "Latin America") {
+                                    return "green";
+                                }
+                                else if (d.Region === "North America") {
+                                    return "purple";
+                                }
+                                else if (d.Region === "Northern/Eastern Europe") {
+                                    return "yellow";
+                                }
+
+
+
+                                else {
+                                    return "black";
+
+                                }
                             });
 
                     })
-                        .catch(err => {
+                    .catch(err => {
                         svg1.append("text")
                             .attr("y", 20)
                             .attr("text-anchor", "left")
@@ -415,24 +490,32 @@
                     });
 
 
-                
+
             }
-            else if (option === '2') {
-                
+            if (option === '2') {
+
                 d3.select("#first").remove();
                 d3.select("#fourth").remove();
                 d3.select("#third").remove();
 
                 //enter all ids of your other graphs
 
-                contenttext =
-                    "<center> <b> <H2>" +
-                    "How GDP varies in each region?" + "</H2></b > " +
-                    "<h3><b>"+"Comment: "+"</b>"+ "Europian Union has higher GDP than other regions"+"</h3></center>";
+                l = "";
+                legendtext = "<hr>"+
+
+                    '<div class="legend1" style="box-sizing: border-box;  text-align: right; padding-right: 300px; display:block;;">' +
+                    '            ' +""+ "</div>";
+                 
+                document.getElementById("legend").innerHTML = l;
+
+                contenttext = '<div style="box-sizing: border-box;  padding-left: 200px; display:block;;">' +               
+                    "<b> <H2><hr>" +
+                    "How average GDP varies in each region?" + "</H2></b > " +
+                    "<h3><b>" + "Comment: " + "</b>" + "Europian Union has higher average GDP than other regions" + "</h3>"+ "</div>";
                 document.getElementById("content").innerHTML = contenttext;
 
                 const svg = d3.select("svg"),
-                    
+
                     margin = { top: 20, right: 20, bottom: 30, left: 50 },
                     width = +svg.attr("width") - margin.left - margin.right,
                     height = +svg.attr("height") - margin.top - margin.bottom,
@@ -460,7 +543,7 @@
                             return d3.mean(v, function (d) { return d.HDI; });
                         })
                         .entries(data)
-                        //.map(function (d) { return d.value; });
+                    //.map(function (d) { return d.value; });
 
                     console.log("groupData", groupData)
 
@@ -468,23 +551,23 @@
                     //var groubedByRegion=groupBy(data, 'Region')
                     //console.log(groubedByRegion);
 
-                   // console.log(data["Middle East/Central Asia"][0]["HDI"]);
+                    // console.log(data["Middle East/Central Asia"][0]["HDI"]);
 
 
-                    var div = d3.select("body").append("div") 
-                            .attr("class", "tooltip")               
-                            .style("opacity", 0);
+                    var div = d3.select("body").append("div")
+                        .attr("class", "tooltip")
+                        .style("opacity", 0);
 
                     g.append("g")
                         .attr("class", "axis axis-x")
                         .attr("transform", `translate(0,${height})`)
                         .call(d3.axisBottom(x));
 
-                    g.append("g")
-                        .attr("class", "axis axis-y")
-                        .call(d3.axisLeft(y).ticks(10).tickSize(8));
+                    //g.append("g")
+                        //.attr("class", "axis axis-y")
+                        //.call(d3.axisLeft(y).ticks(10).tickSize(8));
 
-                   
+
                     g.selectAll(".bar")
                         .data(groupData)
                         .enter().append("rect")
@@ -494,33 +577,33 @@
                         .attr("width", x.bandwidth())
                         .attr("height", d => height - y(d.value))
                         .on('mouseover', function (d, i) {
-                                  d3.select(this).transition()
-                                        .duration('100')
-                                        
-                                  div.transition()
-                                       .duration(100)
+                            d3.select(this).transition()
+                                .duration('100')
+
+                            div.transition()
+                                .duration(100)
                                 .style("opacity", 1);
                             var text = d.value;
-                            a=(text.toFixed(2));
-                                
-               
-                                  div.html(a)
-                                        .style("left", (d3.event.pageX) + "px")     
-                                        .style("top", (d3.event.pageY - 28) + "px")  
+                            a = (text.toFixed(2));
+
+
+                            div.html(a)
+                                .style("left", (d3.event.pageX) + "px")
+                                .style("top", (d3.event.pageY - 28) + "px")
                                 .attr("fill", "black");
-                            
-                            })
+
+                        })
 
 
-                            .on('mouseout', function (d, i) {
-                                  d3.select(this).transition()
-                                       .duration('200')
-                                       
-                                  div.transition()
-                                       .duration('200')
-                                       .style("opacity", 0);
-                             })
-                        //.style('fill', (d,i)=> rainbow(i));
+                        .on('mouseout', function (d, i) {
+                            d3.select(this).transition()
+                                .duration('200')
+
+                            div.transition()
+                                .duration('200')
+                                .style("opacity", 0);
+                        })
+                    //.style('fill', (d,i)=> rainbow(i));
                     //.attr("fill", (d,i) => rainbow(i));
                 })
                     .catch(err => {
@@ -532,76 +615,129 @@
                             .text(`Couldn't open the data file: "${err}".`);
                     });
             }
-            else if (option === '3') {
-
-                contenttext =
-                    "<center> <b> <H2>" +
-                    "Question?" + "</H2></b > " +
-                    "<h3><b>"+"Comment: "+"</b>"+ "Answer"+"</h3></center>";
-                document.getElementById("content").innerHTML = contenttext;
+            if (option === '3') {
                 
                 d3.select("#first").remove();
-                d3.select("#second").remove();
                 d3.select("#fourth").remove();
-                //enter all ids of your other graphs
-                const svg = d3.select("svg"),
+                d3.select("#second").remove();
+
+
+                contenttext = '<div style="box-sizing: border-box;  padding-left: 200px; display:block;;">' +               
+                    "<b> <H2><hr>" +
+                    "Question How each region contributes to cropland?" + "</H2></b > " +
+                    "<h3><b>" + "Comment: Region % to whole cropland" + "</b>"+"</h3>"+ "</div>";
+                document.getElementById("content").innerHTML = contenttext;
+
+                legendtext = "<hr>"+
+
+                    '<div class="legend1" style="box-sizing: border-box;  text-align: right; padding-right: 300px; display:block;;">' +
+                    '            ' +""+ "</div>";
                     
+                document.getElementById("legend").innerHTML = legendtext;
+
+
+
+                const svg = d3.select("svg"),
+
                     margin = { top: 20, right: 20, bottom: 30, left: 50 },
                     width = +svg.attr("width") - margin.left - margin.right,
                     height = +svg.attr("height") - margin.top - margin.bottom,
                     x = d3.scaleBand().rangeRound([0, width]).padding(0.2),
                     y = d3.scaleLinear().rangeRound([height, 0]),
+
                     g = svg.append("g")
-                        //.attr("transform", `translate(${margin.left},${margin.top})`)
-                        .attr("id", "third")
-                        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+                        .attr("transform", `translate(${margin.left},${margin.top})`)
+                        .attr("id", "third");
 
                 d3.json("https://raw.githubusercontent.com/tanyajoon/Visualization/master/csv.json").then(data => {
                     data = data;
                     //var rainbow = d3.scaleSequential(d3.interpolateRainbow).domain([0,d3.sum(data, d => 1)]);
                     //HDIbyRegion = d3.rollup(data, d => d.sport);
                     x.domain(data.map(d => d.Region));
-                    y.domain([0, d3.max(data, d => d.Cropland)]);
+                   
                     var z = d3.scaleOrdinal()
                     z.domain(data.map(function (d) { return d.Region; }))
                     var keys = z.domain()
-
+                    var tots = d3.sum(data, function (d) { return d.Cropland; });
+                    y.domain([0, 1]);
                     var groupData = d3.nest()
+                        
                         .key(function (d) { return d.Region; })
 
                         .rollup(function (v) {
-                            return d3.sum(v, function(d) { return d.Cropland; });
-                       })
+                            
+
+                            var value = d3.sum(v, function (d) { return (d.Cropland); });
+                            return value/tots;
+                        })
                         .entries(data)
-                        //.map(function (d) { return d.value; });
+                    
 
                     console.log("groupData", groupData)
-                    var radius = Math.min(width, height) / 2
-                    var pie = d3.pie().value(function(d) {return d.value; })
-                    var data_ready = pie(d3.entries(groupData))
-                    var color = d3.scaleOrdinal().domain(groupData)
 
-                     g.selectAll("pie")
+
+
+                    var div = d3.select("body").append("div")
+                        .attr("class", "tooltip")
+                        .style("opacity", 0);
+
+                    g.append("g")
+                        .attr("class", "axis axis-x")
+                        .attr("transform", `translate(0,${height})`)
+                        .call(d3.axisBottom(x));
+
+                    //g.append("g")
+                        //.attr("class", "axis axis-y")
+                        //.call(d3.axisLeft(y).ticks(10).tickSize(8));
+
+
+                    g.selectAll(".bar")
                         .data(groupData)
-                         .enter().append("path")
-                          .attr('d', d3.arc()
-                            .innerRadius(100)         // This is the size of the donut hole
-                            .outerRadius(radius)
-                          )
-                          //.attr('fill', function(d){ return(color(d.groupData.key)) })
-                          .attr("stroke", "black")
-                          .style("stroke-width", "2px")
-                          .style("opacity", 0.7)
+                        .enter().append("rect")
+                        .attr("class", "bar")
+                        .attr("x", d => x(d.key))
+                        .attr("y", d => y(d.value))
+                        .attr("width", x.bandwidth())
+                        .attr("height", d => height - y(d.value))
+                        .on('mouseover', function (d, i) {
+                            d3.select(this).transition()
+                                .duration('100')
+
+                            div.transition()
+                                .duration(100)
+                                .style("opacity", 1)
+                                
+                            var text = d.value;
+                            b = text * 100;
+                            a = (b.toFixed(2))+"%";
 
 
-                    
+                            div.html(a)
+                                .style("left", (d3.event.pageX) + "px")
+                                .style("top", (d3.event.pageY - 28) + "px")
+                                .attr("fill", "black");
+
+                        })
 
 
+                        .on('mouseout', function (d, i) {
+                            d3.select(this).transition()
+                                .duration('200')
 
-                    
-                     
+                            div.transition()
+                                .duration('200')
+                                .style("opacity", 0);
+                        })
 
-                });
+                })
+                    .catch(err => {
+                        svg.append("text")
+                            .attr("y", 20)
+                            .attr("text-anchor", "left")
+                            .style("font-size", "20px")
+                            .style("font-weight", "bold")
+                            .text(`Couldn't open the data file: "${err}".`);
+                    });
             }
         }
     </script>
@@ -619,15 +755,21 @@
 
     </div>
     <div><span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; </span></div>
-    
-    <div id="canvas">
+    <div class="vl" style="float:left;display:inline-block ;"></div>
+    <div id="canvas" style="float:left;display:inline-block ;">
+        
 
         <center><svg width="1000" height="500"></svg></center>
-        <div id="content">
+
+        <div id="content" style="float:left; display:inline-block ;">
             <center><H1>This is the page that has some corelations</H1></center>
         </div>
     </div>
+        <div id="legend" style="float:right; display:inline-block ;">
+            <center><H1>This is the page that has some corelations</H1></center>
+        </div>
     
+
     <div class="tooltip"></div>
 </body>
 
