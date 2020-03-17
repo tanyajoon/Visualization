@@ -49,7 +49,7 @@
 			  .attr("class", "bar field1")
 			  .style("fill","blue")
 			  .attr("x", d => xScale1('HDI'))
-			  .attr("y", d => yScale(d["Population (millions)"]))
+			  .attr("y", d => yScale(d["HDI"]))
 			  .attr("width", xScale1.bandwidth())
 			  .attr("height", d => {
 			    return height - margin.top - margin.bottom - yScale(d["HDI"])
