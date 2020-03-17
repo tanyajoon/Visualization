@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
@@ -62,6 +62,7 @@
         }
 
 
+
         /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
         @media screen and (max-height: 450px) {
           .sidenav {padding-top: 15px;}
@@ -75,6 +76,8 @@
         overflow-y: auto;
         padding: 20px;
         }
+
+       
     </style>
 
 
@@ -270,8 +273,72 @@ function loadBoundariesFromGeoJson(geo_json_url){
         document.getElementById("map_canvas").style.marginLeft = "0px";
     }
 
+    function latinAmerica()
+    {
+
+        
+        for(var i in my_boundaries)
+        {
+            if(my_boundaries[i].Region === "Latin America")
+                data_layer.overrideStyle(my_boundaries[i].feature, {
+                fillColor: "green",
+                fillOpacity: 0.9
+            });
+             
+
+               
+        }
+    }
+    function gdp_less()
+    {
+        console.log("GDP")
+        for(var i in my_boundaries)
+        {
+            
+            var am = my_boundaries[i].GDP_per_Capita;
+            if(am !== "none")
+              var gdp = am.substring(1);
+            
+            if(Number(gdp) < 1000)
+            {
+                
+                data_layer.overrideStyle(my_boundaries[i].feature, {
+                fillColor: "brown",
+                fillOpacity: 0.9 });
+                }
+               
+             }
+    }
+    function cmoreg()
+    {
+        for(var i in  my_boundaries)
+        {
+            if(Number(my_boundaries[i].Cropland) > Number(my_boundaries[i].Grazing_Land))
+            {
+                data_layer.overrideStyle(my_boundaries[i].feature, {
+                fillColor: "teal",
+                fillOpacity: 0.9 });
+                }
+                
+        }
+    }
+    function european()
+    {
+        for(var i in my_boundaries)
+        {
+            if(my_boundaries[i].Region === "European Union")
+                data_layer.overrideStyle(my_boundaries[i].feature, {
+                fillColor: "pink",
+                fillOpacity: 0.9
+            });
+             
+
+               
+        }
+    }
     function maxPopulation()
     {
+        
         var arr = [];
         for(var i in my_boundaries)
         {
@@ -284,7 +351,34 @@ function loadBoundariesFromGeoJson(geo_json_url){
                 fillOpacity: 0.9
             });        
     }
-
+    function least_footprint()
+    {
+        var arr = [];
+        for(var i in my_boundaries)
+        {
+            arr.push(my_boundaries[i].Total_Ecological_Footprint)                       
+        }        
+        minIndex = indexOfMin(arr)
+        console.log(minIndex)        
+        data_layer.overrideStyle(my_boundaries[minIndex].feature, {
+                fillColor: "yellow",
+                fillOpacity: 0.9
+            });  
+    }
+    function maxBio()
+    {
+        var arr = [];
+        for(var i in my_boundaries)
+        {
+            arr.push(my_boundaries[i].Total_Biocapacity)                       
+        }        
+        maxIndex = indexOfMax(arr)
+        console.log(maxIndex)        
+        data_layer.overrideStyle(my_boundaries[maxIndex].feature, {
+                fillColor: "purple",
+                fillOpacity: 0.9
+            }); 
+    }
     function indexOfMax(arr) {
     if (arr.length === 0) {
         return -1;
@@ -301,6 +395,22 @@ function loadBoundariesFromGeoJson(geo_json_url){
     }
     return maxIndex + 1;
     }
+    function indexOfMin(arr) {
+    if (arr.length === 0) {
+        return -1;
+    }
+
+    var min = 9999;
+    var minIndex = 0;
+
+    for (var i = 1; i < arr.length; i++) {
+        if (Number(arr[i]) < Number(min)) {
+            minIndex = i;
+            min = arr[i];
+        }
+    }
+    return minIndex + 1;
+    }
 
 
     function clearAll()
@@ -313,7 +423,6 @@ function loadBoundariesFromGeoJson(geo_json_url){
         loadBoundariesFromGeoJson("https://raw.githubusercontent.com/tanyajoon/Visualization/master/data.geojson");
     }
 
-        
 
 
 
@@ -323,9 +432,18 @@ function loadBoundariesFromGeoJson(geo_json_url){
     <div id="side_panel" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 
-        <a href="new_page.html">Other Page</a>
+        <a href="a2.html">Other Page</a>
+
         <center><H3> Let's Visualize </H3> </center>
-        <div id="popu_btn"><button class="btn btn-primary btn-lg btn-block" onclick="maxPopulation()"> Show the Heighest Population Country</button> </div>
+        <a onclick = "maxPopulation()"><H5>Heighest Population</H5> </a>
+        <a onclick = "latinAmerica()"> <H5>Latin American Countries</H5> </a>
+        <a onclick = "european()"> <H5>European Union</H5></a>
+        <a onclick = "least_footprint()"> <H5>Least Ecological Footprint</H5></a>
+        <a onclick = "maxBio()"> <H5>Heighest Biocapacity</H5></a>
+        <a onclick = "gdp_less()"> <H5> GDP less than 1000</H5></a>
+        <a onclick = "cmoreg()"> <H5> Cropland more than Grazing Land</H5></a>
+
+
 
         <button type="button" class="btn btn-primary btn-lg btn-block" onclick="clearAll()">Clear</button>
 
