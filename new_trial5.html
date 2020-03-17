@@ -309,14 +309,15 @@ function loadBoundariesFromGeoJson(geo_json_url){
                
              }
     }
-    function cmoreg()
+    
+    function umoref()
     {
         for(var i in  my_boundaries)
         {
-            if(Number(my_boundaries[i].Cropland) > Number(my_boundaries[i].Grazing_Land))
+            if(Number(my_boundaries[i].Urban_Land) > Number(my_boundaries[i].Forest_Land))
             {
                 data_layer.overrideStyle(my_boundaries[i].feature, {
-                fillColor: "teal",
+                fillColor: '#2980B9',
                 fillOpacity: 0.9 });
                 }
                 
@@ -365,19 +366,49 @@ function loadBoundariesFromGeoJson(geo_json_url){
                 fillOpacity: 0.9
             });  
     }
-    function maxBio()
+    function highest_footprint()
     {
         var arr = [];
         for(var i in my_boundaries)
         {
-            arr.push(my_boundaries[i].Total_Biocapacity)                       
+            arr.push(my_boundaries[i].Total_Ecological_Footprint)
+
         }        
         maxIndex = indexOfMax(arr)
         console.log(maxIndex)        
         data_layer.overrideStyle(my_boundaries[maxIndex].feature, {
-                fillColor: "purple",
+                fillColor: '#E59866',
                 fillOpacity: 0.9
             }); 
+    }
+    function highbioreserve()
+    {
+        var arr = [];
+        for(var i in my_boundaries)
+        {
+            arr.push(my_boundaries[i].Biocapacity_Deficit_or_Reserve)                       
+        }        
+        maxIndex = indexOfMax(arr)
+        console.log(maxIndex)        
+        data_layer.overrideStyle(my_boundaries[maxIndex].feature, {
+                fillColor: "grey",
+                fillOpacity: 0.9
+            }); 
+
+    }
+    function lowbioreserve()
+    {
+        var arr = [];
+        for(var i in my_boundaries)
+        {
+            arr.push(my_boundaries[i].Biocapacity_Deficit_or_Reserve)                       
+        }        
+        minIndex = indexOfMin(arr)
+        console.log(minIndex)        
+        data_layer.overrideStyle(my_boundaries[minIndex].feature, {
+                fillColor: "red",
+                fillOpacity: 0.9
+            });  
     }
     function indexOfMax(arr) {
     if (arr.length === 0) {
@@ -432,16 +463,18 @@ function loadBoundariesFromGeoJson(geo_json_url){
     <div id="side_panel" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 
-        <a href="a2.html">Other Page</a>
+        <a href="a2.html">Analysis Page</a>
 
         <center><H3> Let's Visualize </H3> </center>
-        <a onclick = "maxPopulation()"><H5>Heighest Population</H5> </a>
+        <a onclick = "maxPopulation()"><H5>Highest Population</H5> </a>
         <a onclick = "latinAmerica()"> <H5>Latin American Countries</H5> </a>
         <a onclick = "european()"> <H5>European Union</H5></a>
+        <a onclick = "highest_footprint()"> <H5>Highest Ecological Footprint</H5></a>
         <a onclick = "least_footprint()"> <H5>Least Ecological Footprint</H5></a>
-        <a onclick = "maxBio()"> <H5>Heighest Biocapacity</H5></a>
-        <a onclick = "gdp_less()"> <H5> GDP less than 1000</H5></a>
-        <a onclick = "cmoreg()"> <H5> Cropland more than Grazing Land</H5></a>
+        <a onclick = "gdp_less()"> <H5> GDP less than $1000</H5></a>
+        <a onclick = "umoref()"> <H5> Urban Land more than Forest Land</H5></a>
+        <a onclick = "highbioreserve()"> <h5>Highest Biocapacity Reserve</h5></a>
+        <a onclick = "lowbioreserve()"> <h5> Lowest Biocapacity Reserve</h5></a>    
 
 
 
