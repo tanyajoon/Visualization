@@ -147,10 +147,14 @@
                     x = d3.scaleLinear().rangeRound([0, width]),
 
                     y = d3.scaleLinear().rangeRound([height, 0]),
+                    z = d3.scaleLinear().domain([0,1408.04]).range([ 4, 25]) 
+
                    // g2 = svg1.append("svg"),
                     g1 = svg1.append("g")
                         .attr("transform", `translate(${margin.left},${margin.top})`)
                         .attr("id", "first");
+
+                    
 
                 d3.json("https://raw.githubusercontent.com/tanyajoon/Visualization/master/csv.json")
                     .then(data => {
@@ -158,6 +162,7 @@
                         y.domain([0, d3.max(data, d => d["Total Ecological Footprint"])]);
                         x.domain([0, d3.max(data, d => d.HDI)]);
 
+                        
                         g1.append("g")
                             .attr("class", "axis axis-x")
                             .attr("transform", `translate(0,${height})`)
@@ -195,14 +200,15 @@
                             .attr("class", "bar")
                             .attr("cx", d => x(d.HDI))
                             .attr("cy", d => y(d["Total Ecological Footprint"]))
-                            .attr("r", 3)
+                            .attr("r",  d => z(d["Population (millions)"]))
                             .on('mouseover', function (d, i) {
                                   d3.select(this).transition()
                                         .duration('100')
-                                        .attr("r", 7);
+                                        .attr("r", 10);
                                   div.transition()
                                        .duration(100)
-                                    .style("opacity", 1);
+                                    .style("opacity", 0.7);
+                                
                                 var text = d.Country;
                                   div.html(text)
                                         .style("left", (d3.event.pageX) + "px")     
@@ -213,9 +219,10 @@
 
 
                             .on('mouseout', function (d, i) {
-                                  d3.select(this).transition()
-                                       .duration('200')
-                                       .attr("r", 4);
+                                d3.select(this).transition()
+                                    .duration('200')
+                                    .attr("r", d => z(d["Population (millions)"]));
+                                       
                                   div.transition()
                                        .duration('200')
                                        .style("opacity", 0);
@@ -431,6 +438,7 @@
                     height = +svg.attr("height") - margin.top - margin.bottom,
                     x = d3.scaleBand().rangeRound([0, width]).padding(0.2),
                     y = d3.scaleLinear().rangeRound([height, 0]),
+
                     g = svg.append("g")
                         .attr("transform", `translate(${margin.left},${margin.top})`)
                         .attr("id", "second");
@@ -456,12 +464,7 @@
 
                     console.log("groupData", groupData)
 
-                    var groupBy = function(xs, key) {
-                      return xs.reduce(function(rv, x) {
-                        (rv[x[key]] = rv[x[key]] || []).push(x);
-                        return rv;
-                      }, {});
-                    };
+
                     //var groubedByRegion=groupBy(data, 'Region')
                     //console.log(groubedByRegion);
 
