@@ -77,11 +77,16 @@
             padding: 20px;
         }
 
+        .bar.field4:hover {
+            fill: slateblue;
+            }
         .bar {
             fill: #71EEB8;
+            
         }
 
             .bar:hover {
+                
                 fill: slateblue;
             }
 
@@ -779,7 +784,10 @@
                     axisTicks = {qty: 5, outerSize: 0, dateFormat: '%m-%d'},
 
                     xScale0 = d3.scaleBand().range([0, width - margin.left - margin.right]).padding(barPadding)
-			        xScale1 = d3.scaleBand()
+                xScale1 = d3.scaleBand()
+
+
+
 			        yScale = d3.scaleLinear().range([height - margin.top - margin.bottom, 0])
 			        xAxis = d3.axisBottom(xScale0).tickSizeOuter(axisTicks.outerSize);
 			        yAxis = d3.axisLeft(yScale).ticks(axisTicks.qty).tickSizeOuter(axisTicks.outerSize);
@@ -791,8 +799,20 @@
                 d3.json("https://raw.githubusercontent.com/tanyajoon/Visualization/master/region.json").then(data => {
                     data = data;
                     xScale0.domain(data.map(d => d.Region))
-			        xScale1.domain(['HDI', 'Forest Land']).range([0, xScale0.bandwidth()])
-			        yScale.domain([0, d3.max(data, d => d.HDI > d["Forest Land"] ? d.HDI : d["Forest Land"])])
+                    xScale1.domain(["Cropland", "Grazing Land", "Forest Land", "Fishing Water", "Urban Land"]).range([0, xScale0.bandwidth()])
+                    yScale.domain([0, d3.max(data, function (d) {
+
+                        if (d.Cropland > d["Forest Land"] && d.Cropland > d["Grazing Land"] && d.Cropland > d["Urban Land"])
+                            b = d.Cropland;
+                        else
+                            b = d["Urban Land"];
+
+                        return b;
+
+                    })
+
+
+                    ])
 
 
 
@@ -808,46 +828,85 @@
 
 
                    var Country = g.selectAll(".Region")
-  			.data(data)
-  			.enter().append("g")
-                       .attr("class", "Region")
-                       .attr("transform", d => `translate(${xScale0(d.Region)},0)`);
+  			        .data(data)
+  			        .enter().append("g")
+                               .attr("class", "Region")
+                               .attr("transform", d => `translate(${xScale0(d.Region)},0)`);
 
-  			/* Add field1 bars */
-			Country.selectAll(".bar.field1")
-			  .data(d => [d])
-			  .enter()
-			  .append("rect")
-			  .attr("class", "bar field1")
-			  .style("fill","blue")
-			  .attr("x", d => xScale1('HDI'))
-			  .attr("y", d => yScale(d["HDI"]))
-			  .attr("width", xScale1.bandwidth())
-			  .attr("height", d => {
-			    return height - margin.top - margin.bottom - yScale(d["HDI"])
-			  });
+  			        /* Add field1 bars */
+			        Country.selectAll(".bar.field1")
+			          .data(d => [d])
+			          .enter()
+			          .append("rect")
+			          .attr("class", "bar field1")
+			          .style("fill","blue")
+			          .attr("x", d => xScale1('Cropland'))
+			          .attr("y", d => yScale(d["Cropland"]))
+			          .attr("width", xScale1.bandwidth())
+			          .attr("height", d => {
+			            return height - margin.top - margin.bottom - yScale(d["Cropland"])
+			          });
 			  
-			/* Add field2 bars */
-                    Country.selectAll(".bar.field2")
-                        .data(d => [d])
-                        .enter()
-                        .append("rect")
-                        .attr("class", "bar field2")
-                        .style("fill", "red")
-                        .attr("x", d => xScale1('Forest Land'))
-                        .attr("y", d => yScale(d["Forest Land"]))
-                        .attr("width", xScale1.bandwidth())
-                        .attr("height", d => {
-                            return height - margin.top - margin.bottom - yScale(d["Forest Land"])
-                        });
-                  g.append("g")
-			     .attr("class", "x axis")
-			     .attr("transform", `translate(0 , ${height - margin.top-margin.bottom})`)
-			     .call(xAxis);
-			// Add the Y Axis
-			g.append("g")
-			     .attr("class", "y axis")
-			     .call(yAxis);
+			        /* Add field2 bars */
+                       Country.selectAll(".bar.field2")
+                                .data(d => [d])
+                                .enter()
+                                .append("rect")
+                                .attr("class", "bar field2")
+                                .style("fill", "red")
+                                .attr("x", d => xScale1('Forest Land'))
+                                .attr("y", d => yScale(d["Forest Land"]))
+                                .attr("width", xScale1.bandwidth())
+                                .attr("height", d => {
+                                    return height - margin.top - margin.bottom - yScale(d["Forest Land"])
+                                });
+                    /* Add field3 bars */
+                      Country.selectAll(".bar.field3")
+                                .data(d => [d])
+                                .enter()
+                                .append("rect")
+                                .attr("class", "bar field3")
+                                .style("fill", "green")
+                                .attr("x", d => xScale1("Grazing Land"))
+                                .attr("y", d => yScale(d["Grazing Land"]))
+                                .attr("width", xScale1.bandwidth())
+                                .attr("height", d => {
+                                    return height - margin.top - margin.bottom - yScale(d["Grazing Land"])
+                                });
+                       /* Add field4 bars */
+                      Country.selectAll(".bar.field4")
+                                .data(d => [d])
+                                .enter()
+                                .append("rect")
+                                .attr("class", "bar field4")
+                                .style("fill", "yellow")
+                                .attr("x", d => xScale1('Fishing Water'))
+                                .attr("y", d => yScale(d["Fishing Water"]))
+                                .attr("width", xScale1.bandwidth())
+                                .attr("height", d => {
+                                    return height - margin.top - margin.bottom - yScale(d["Fishing Water"])
+                                });
+                        /* Add field5 bars */
+                      Country.selectAll(".bar.field5")
+                                .data(d => [d])
+                                .enter()
+                                .append("rect")
+                                .attr("class", "bar field5")
+                                .style("fill", "balck")
+                                .attr("x", d => xScale1('Urban Land'))
+                                .attr("y", d => yScale(d["Urban Land"]))
+                                .attr("width", xScale1.bandwidth())
+                                .attr("height", d => {
+                                    return height - margin.top - margin.bottom - yScale(d["Urban Land"])
+                                });
+                    g.append("g")
+			             .attr("class", "x axis")
+			             .attr("transform", `translate(0 , ${height - margin.top-margin.bottom})`)
+			             .call(xAxis);
+			        // Add the Y Axis
+			        g.append("g")
+			             .attr("class", "y axis")
+			             .call(yAxis);
 
 
                 })
