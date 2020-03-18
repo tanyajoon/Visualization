@@ -1,7 +1,7 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
+
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.25.0/babel.min.js"></script>
     <style type="text/css">
@@ -10,16 +10,14 @@
         }
 
         body {
-            height: 95%;
+            height: 100%;
             margin: 0px;
             padding: 0px;
-            background: lightblue;
+            background: #D3D3D3;
             color: black;
+            font-family: Calibri;
         }
 
-        .canvas {
-            background-color: lightblue;
-        }
 
         .sidenav {
             height: 100%; /* 100% Full-height */
@@ -46,7 +44,7 @@
 
                 /* When you mouse over the navigation links, change their color */
                 .sidenav a:hover {
-                    color: #f1f1f1;
+                    background-color: darkslategray;
                 }
 
             /* Position and style the close button (top right corner) */
@@ -70,7 +68,7 @@
 
         div.scroll {
             color: black;
-            width: 300px;
+            width: 270px;
             height: 150px;
             overflow-x: hidden;
             overflow-y: auto;
@@ -78,23 +76,18 @@
         }
 
         .bar.field4:hover {
-            fill: slateblue;
-            }
+            fill: #39CCCC;
+        }
+
         .bar {
             fill: #71EEB8;
-            
         }
 
             .bar:hover {
-                
                 fill: slateblue;
             }
 
 
-
-        .axis text {
-            font-weight: bold;
-        }
 
         div.tooltip {
             position: absolute;
@@ -108,8 +101,9 @@
             border-radius: 8px;
             pointer-events: none;
         }
-        #legend{
-    overflow:hidden;
+
+        #legend {
+            overflow: hidden;
         }
 
         .key-dot {
@@ -122,41 +116,54 @@
         }
 
         .legend {
-
-        float:left;
-        margin-right: 1em;
+            float: left;
+            margin-right: 1em;
         }
 
-        .Middle { background: red;}
-        .Africa { background: orange;}
-        .Asia { background: pink;}
-        .EU { background: blue;}
-        .Latin { background: green;}
-        .North { background: purple;}
-        .Europe{background:yellow; }
 
-        .bar1 { background: blue; }
-        .bar2 { background: green; }
-        .bar3 { background: red; }
-        .bar4 { background: yellow; }
-        .bar5 { background: black; }
+        .Middle {
+            background: #ED553B;
+        }
+
+        .Africa {
+            background: slateblue;
+        }
+
+        .Asia {
+            background: #85144B;
+        }
+
+        .EU {
+            background: #20639B;
+        }
+
+        .Latin {
+            background: #ff81fc;
+        }
+
+        .North {
+            background: YELLOW;
+        }
+
+        .Europe {
+            background: #3D9970;
+        }
 
         hr {
-          display: block;
-        height: 75px;
-        background-color: lightblue;
-        border: none;
-
+            display: block;
+            height: 75px;
+            border: none;
         }
+
         .vl {
-          border-left: 150px solid lightblue;
-          height: 500px;
+            border-left: 150px solid #D3D3D3;
+            height: 500px;
         }
     </style>
     <script type="text/javascript">
         function openNav() {
-            document.getElementById("side_panel").style.width = "250px";
-            document.getElementById("canvas").style.marginLeft = "250px";
+            document.getElementById("side_panel").style.width = "270px";
+            document.getElementById("canvas").style.marginLeft = "270px";
         }
 
         /* Set the width of the side navigation to 0 */
@@ -179,23 +186,22 @@
             if (option === '1') {
                 d3.select("#first").remove();
                 d3.select("#second").remove();
-                d3.select("#third").remove(); 
+                d3.select("#third").remove();
                 d3.select("#fourth").remove();
                 d3.select("#fifth").remove();
 
-                contenttext = '<div style="box-sizing: border-box;  padding-left: 200px; display:block;;">' +               
-                    "<b> <H2><hr>" +
-                    "Do developed countries impact the ecosystem more?"  + "</H2></b > " +
-                    "<h3><b>"+"Comment: "+"</b>"+ "After a country reaches HDI of 0.6 score, countries footprint seems to be accelerated"+"</h3>"+ "</div>";
+                contenttext = '<div style="box-sizing: border-box;  padding-left: 200px; display:block;;">' +
+                    " <H2><hr>" +
+                    "Do developed countries impact the ecosystem more?" + "</H2> " +
+                    "<h3>" + "<p>" + "Comment:" + "</p>" + " After a country reaches HDI of 0.6 score," + " countries footprint seems to be accelerated" + "</h3>" + "</div>";
                 document.getElementById("content").innerHTML = contenttext;
 
-   
-                legendtext = "<hr>"+
+                legendtext = "<hr>" +
 
-                    '<div class="legend1" style="box-sizing: border-box;  text-align: right; padding-right: 300px; display:block;;">' +
+                    '<div class="legend1" style="box-sizing: border-box;  text-align: right; padding-right: 270px; display:block;;">' +
                     '            ' +
                     '                ' +
-                    '                <div class="legend1"> <p class="country-name"><span class="key-dot Middle"></span>"Middle East/Central Asia</p> </div>' +
+                    '                <div class="legend1"> <p class="country-name"><span class="key-dot Middle"></span>Middle East/Central Asia</p> </div>' +
                     '                <div class="legend1"> <p class="country-name"><span class="key-dot Africa"></span>Africa</p> </div>' +
                     '                <div class="legend1"> <p class="country-name"><span class="key-dot Asia"></span>Asia-Pacific</p> </div>' +
                     '           ' +
@@ -204,7 +210,7 @@
                     '                <div class="legend1"> <p class="country-name"><span class="key-dot North"></span>North America</p> </div>' +
                     '                <div class="legend1"> <p class="country-name"><span class="key-dot Europe"></span>Northern/Eastern Europe</p> </div>' +
                     '           ' + "</div>";
-                    
+
                 document.getElementById("legend").innerHTML = legendtext;
 
                 const svg1 = d3.select("svg"),
@@ -268,7 +274,8 @@
                             .attr("class", "bar")
                             .attr("cx", d => x(d.HDI))
                             .attr("cy", d => y(d["Total Ecological Footprint"]))
-                            .attr("r", d => z(d["Population (millions)"]))
+                            .attr("r", 0)
+                            //.attr("r", d => z(d["Population (millions)"]))
                             .on('mouseover', function (d, i) {
                                 d3.select(this).transition()
                                     .duration('100')
@@ -298,28 +305,30 @@
                             //.style("fill", "black")
                             .style("fill", function (d, i) {
 
+
+
                                 if (d.Region === "Middle East/Central Asia") {
-                                    return "red";
+                                    return "#ED553B";
                                 }
 
                                 else if (d.Region === "Africa") {
-                                    return "orange";
+                                    return "slateblue";
                                 }
 
                                 else if (d.Region === "Asia-Pacific") {
-                                    return "pink";
+                                    return "#85144B";
                                 }
                                 else if (d.Region === "European Union") {
-                                    return "blue";
+                                    return "#20639B";
                                 }
                                 else if (d.Region === "Latin America") {
-                                    return "green";
+                                    return "#ff81fc";
                                 }
                                 else if (d.Region === "North America") {
-                                    return "purple";
+                                    return " YELLOW";
                                 }
                                 else if (d.Region === "Northern/Eastern Europe") {
-                                    return "yellow";
+                                    return "#3D9970";
                                 }
 
 
@@ -329,6 +338,16 @@
 
                                 }
                             });
+                        g1.selectAll(".bar")
+                            .transition()
+                            .duration(100)
+                            .attr("r", d => z(d["Population (millions)"]))
+
+                            //.attr("y", d => { return yScale(d["Cropland"]) })
+                            //.attr("height", d => {
+                            //return height - margin.top - margin.bottom - yScale(d["Cropland"])
+                            //})
+                            .delay(function (d, i) { return i * 10; });
 
                     })
                     .catch(err => {
@@ -343,25 +362,25 @@
 
             }
 
-            if (option === '4') {
+            if (option === '2') {
                 d3.select("#first").remove();
                 d3.select("#second").remove();
-                d3.select("#third").remove(); 
+                d3.select("#third").remove();
                 d3.select("#fourth").remove();
                 d3.select("#fifth").remove();
 
-                contenttext = '<div style="box-sizing: border-box;  padding-left: 200px; display:block;;">' +               
-                    "<b> <H2><hr>" +
-                    "Do Rich countries impact the ecosystem more?" + "</H2></b > " +
-                    "<h3><b>" + "Comment: " + "</b>" + "Countries ecological footprint does not seems to be impacted by GDP"+"</h3>"+ "</div>";
+                contenttext = '<div style="box-sizing: border-box;  padding-left: 200px; display:block;;">' +
+                    " <H2><hr>" +
+                    "Do Rich countries impact the ecosystem more?" + "</H2> " +
+                    "<h3>" + "Comment: " + "" + "Countries ecological footprint does not seems to be impacted by GDP" + "</h3>" + "</div>";
                 document.getElementById("content").innerHTML = contenttext;
 
-                legendtext = "<hr>"+
+                legendtext = "<hr>" +
 
-                    '<div class="legend1" style="box-sizing: border-box;  text-align: right; padding-right: 300px; display:block;;">' +
+                    '<div class="legend1" style="box-sizing: border-box;  text-align: right; padding-right: 270px; display:block;;">' +
                     '            ' +
                     '                ' +
-                    '                <div class="legend1"> <p class="country-name"><span class="key-dot Middle"></span>"Middle East/Central Asia</p> </div>' +
+                    '                <div class="legend1"> <p class="country-name"><span class="key-dot Middle"></span>Middle East/Central Asia</p> </div>' +
                     '                <div class="legend1"> <p class="country-name"><span class="key-dot Africa"></span>Africa</p> </div>' +
                     '                <div class="legend1"> <p class="country-name"><span class="key-dot Asia"></span>Asia-Pacific</p> </div>' +
                     '           ' +
@@ -370,7 +389,7 @@
                     '                <div class="legend1"> <p class="country-name"><span class="key-dot North"></span>North America</p> </div>' +
                     '                <div class="legend1"> <p class="country-name"><span class="key-dot Europe"></span>Northern/Eastern Europe</p> </div>' +
                     '           ' + "</div>";
-                    
+
                 document.getElementById("legend").innerHTML = legendtext;
 
 
@@ -385,10 +404,10 @@
 
                     y = d3.scaleLinear().rangeRound([height, 0]),
                     z = d3.scaleLinear().domain([0, 1408.04]).range([4, 25])
-                    // g2 = svg1.append("svg"),
-                    g1 = svg1.append("g")
-                        .attr("transform", `translate(${margin.left},${margin.top})`)
-                        .attr("id", "fourth");
+                // g2 = svg1.append("svg"),
+                g1 = svg1.append("g")
+                    .attr("transform", `translate(${margin.left},${margin.top})`)
+                    .attr("id", "second");
 
                 d3.json("https://raw.githubusercontent.com/tanyajoon/Visualization/master/csv.json")
                     .then(data => {
@@ -409,17 +428,23 @@
                         // x axis label:
                         g1.append("text")
                             .attr("text-anchor", "end")
+                            .attr("class", "axis")
                             .attr("x", (width / 2))
                             .attr("y", height + margin.top + 20)
+                            //.style('fill', 'white')
                             .text("GDP per Capita");
 
                         // Y axis label:
-                        g1.append("text")
+                        g1.append('text')
+                            .attr("class", "axis")
                             .attr("text-anchor", "end")
                             .attr("transform", "rotate(-90)")
                             .attr("y", -margin.left + 100)
                             .attr("x", (-height / 2))
-                            .text("Total Ecological Footprint");
+                            //.style('fill', 'white')
+                            .text("Total Ecological Footprint")
+
+
 
                         var div = d3.select("body").append("div")
                             .attr("class", "tooltip")
@@ -434,7 +459,7 @@
                             .attr("class", "bar")
                             .attr("cx", d => x(d["GDP per Capita"]))
                             .attr("cy", d => y(d["Total Ecological Footprint"]))
-                            .attr("r", d => z(d["Population (millions)"]))
+                            .attr("r", 0)
                             .on('mouseover', function (d, i) {
                                 d3.select(this).transition()
                                     .duration('100')
@@ -446,7 +471,7 @@
                                 div.html(text)
                                     .style("left", (d3.event.pageX) + "px")
                                     .style("top", (d3.event.pageY - 28) + "px")
-                                    .attr("fill", "black");
+
 
                             })
 
@@ -462,28 +487,30 @@
                             //.style("fill", "black")
                             .style("fill", function (d, i) {
 
+
+
                                 if (d.Region === "Middle East/Central Asia") {
-                                    return "red";
+                                    return "#ED553B";
                                 }
 
                                 else if (d.Region === "Africa") {
-                                    return "orange";
+                                    return "slateblue";
                                 }
 
                                 else if (d.Region === "Asia-Pacific") {
-                                    return "pink";
+                                    return "#85144B";
                                 }
                                 else if (d.Region === "European Union") {
-                                    return "blue";
+                                    return "#20639B";
                                 }
                                 else if (d.Region === "Latin America") {
-                                    return "green";
+                                    return "#ff81fc";
                                 }
                                 else if (d.Region === "North America") {
-                                    return "purple";
+                                    return " YELLOW";
                                 }
                                 else if (d.Region === "Northern/Eastern Europe") {
-                                    return "yellow";
+                                    return "#3D9970";
                                 }
 
 
@@ -493,6 +520,16 @@
 
                                 }
                             });
+                        g1.selectAll(".bar")
+                            .transition()
+                            .duration(100)
+                            .attr("r", d => z(d["Population (millions)"]))
+
+                            //.attr("y", d => { return yScale(d["Cropland"]) })
+                            //.attr("height", d => {
+                            //return height - margin.top - margin.bottom - yScale(d["Cropland"])
+                            //})
+                            .delay(function (d, i) { return i * 10; });
 
                     })
                     .catch(err => {
@@ -505,153 +542,30 @@
                     });
 
 
-
             }
-            if (option === '2') {
+            if (option === '3') {
 
                 d3.select("#first").remove();
                 d3.select("#second").remove();
-                d3.select("#third").remove(); 
+                d3.select("#third").remove();
                 d3.select("#fourth").remove();
                 d3.select("#fifth").remove();
 
                 //enter all ids of your other graphs
 
                 l = "";
-                legendtext = "<hr>"+
+                legendtext = "<hr>" +
 
-                    '<div class="legend1" style="box-sizing: border-box;  text-align: right; padding-right: 300px; display:block;;">' +
-                    '            ' +""+ "</div>";
-                 
+                    '<div class="legend1" style="box-sizing: border-box;  text-align: right; padding-right: 270px; display:block;;">' +
+                    '            ' + "" + "</div>";
+
                 document.getElementById("legend").innerHTML = l;
 
-                contenttext = '<div style="box-sizing: border-box;  padding-left: 200px; display:block;;">' +               
-                    "<b> <H2><hr>" +
-                    "How average GDP varies in each region?" + "</H2></b > " +
-                    "<h3><b>" + "Comment: " + "</b>" + "Europian Union has higher average GDP than other regions" + "</h3>"+ "</div>";
+                contenttext = '<div style="box-sizing: border-box;  padding-left: 200px; display:block;;">' +
+                    " <H2><hr>" +
+                    "How Biocapacity varies in each region?" + "</H2> " +
+                    "<h3>" + "Comment: " + "" + "Middle East/ Cental Asia has highest Biocapacity Deficit than other regions." + "<p>" + "Biocapacity Reserve is substantial in Latin America." + "</p></h3>" + "</div>";
                 document.getElementById("content").innerHTML = contenttext;
-
-                const svg = d3.select("svg"),
-
-                    margin = { top: 20, right: 20, bottom: 30, left: 50 },
-                    width = +svg.attr("width") - margin.left - margin.right,
-                    height = +svg.attr("height") - margin.top - margin.bottom,
-                    x = d3.scaleBand().rangeRound([0, width]).padding(0.2),
-                    y = d3.scaleLinear().rangeRound([height, 0]),
-
-                    g = svg.append("g")
-                        .attr("transform", `translate(${margin.left},${margin.top})`)
-                        .attr("id", "second");
-
-                d3.json("https://raw.githubusercontent.com/tanyajoon/Visualization/master/csv.json").then(data => {
-                    data = data;
-                    //var rainbow = d3.scaleSequential(d3.interpolateRainbow).domain([0,d3.sum(data, d => 1)]);
-                    //HDIbyRegion = d3.rollup(data, d => d.sport);
-                    x.domain(data.map(d => d.Region));
-                    y.domain([0, d3.max(data, d => d.HDI)]);
-                    var z = d3.scaleOrdinal()
-                    z.domain(data.map(function (d) { return d.Region; }))
-                    var keys = z.domain()
-
-                    var groupData = d3.nest()
-                        .key(function (d) { return d.Region; })
-
-                        .rollup(function (v) {
-                            return d3.mean(v, function (d) { return d.HDI; });
-                        })
-                        .entries(data)
-                    //.map(function (d) { return d.value; });
-
-                    console.log("groupData", groupData)
-
-
-                    //var groubedByRegion=groupBy(data, 'Region')
-                    //console.log(groubedByRegion);
-
-                    // console.log(data["Middle East/Central Asia"][0]["HDI"]);
-
-
-                    var div = d3.select("body").append("div")
-                        .attr("class", "tooltip")
-                        .style("opacity", 0);
-
-                    g.append("g")
-                        .attr("class", "axis axis-x")
-                        .attr("transform", `translate(0,${height})`)
-                        .call(d3.axisBottom(x));
-
-                    //g.append("g")
-                        //.attr("class", "axis axis-y")
-                        //.call(d3.axisLeft(y).ticks(10).tickSize(8));
-
-
-                    g.selectAll(".bar")
-                        .data(groupData)
-                        .enter().append("rect")
-                        .attr("class", "bar")
-                        .attr("x", d => x(d.key))
-                        .attr("y", d => y(d.value))
-                        .attr("width", x.bandwidth())
-                        .attr("height", d => height - y(d.value))
-                        .on('mouseover', function (d, i) {
-                            d3.select(this).transition()
-                                .duration('100')
-
-                            div.transition()
-                                .duration(100)
-                                .style("opacity", 1);
-                            var text = d.value;
-                            a = (text.toFixed(2));
-
-
-                            div.html(a)
-                                .style("left", (d3.event.pageX) + "px")
-                                .style("top", (d3.event.pageY - 28) + "px")
-                                .attr("fill", "black");
-
-                        })
-
-
-                        .on('mouseout', function (d, i) {
-                            d3.select(this).transition()
-                                .duration('200')
-
-                            div.transition()
-                                .duration('200')
-                                .style("opacity", 0);
-                        })
-                    //.style('fill', (d,i)=> rainbow(i));
-                    //.attr("fill", (d,i) => rainbow(i));
-                })
-                    .catch(err => {
-                        svg.append("text")
-                            .attr("y", 20)
-                            .attr("text-anchor", "left")
-                            .style("font-size", "20px")
-                            .style("font-weight", "bold")
-                            .text(`Couldn't open the data file: "${err}".`);
-                    });
-            }
-            if (option === '3') {
-                
-                d3.select("#first").remove();
-                d3.select("#second").remove();
-                d3.select("#third").remove(); 
-                d3.select("#fourth").remove();
-                d3.select("#fifth").remove();
-
-                contenttext = '<div style="box-sizing: border-box;  padding-left: 200px; display:block;;">' +               
-                    "<b> <H2><hr>" +
-                    "Question How each region contributes to cropland?" + "</H2></b > " +
-                    "<h3><b>" + "Comment: Region % to whole cropland" + "</b>"+"</h3>"+ "</div>";
-                document.getElementById("content").innerHTML = contenttext;
-
-                legendtext = "<hr>"+
-
-                    '<div class="legend1" style="box-sizing: border-box;  text-align: right; padding-right: 300px; display:block;;">' +
-                    '            ' +""+ "</div>";
-                    
-                document.getElementById("legend").innerHTML = legendtext;
 
 
 
@@ -672,24 +586,232 @@
                     //var rainbow = d3.scaleSequential(d3.interpolateRainbow).domain([0,d3.sum(data, d => 1)]);
                     //HDIbyRegion = d3.rollup(data, d => d.sport);
                     x.domain(data.map(d => d.Region));
-                   
+
+
+
                     var z = d3.scaleOrdinal()
                     z.domain(data.map(function (d) { return d.Region; }))
                     var keys = z.domain()
-                    var tots = d3.sum(data, function (d) { return d.Cropland; });
-                    y.domain([0, 1]);
+
                     var groupData = d3.nest()
-                        
                         .key(function (d) { return d.Region; })
 
                         .rollup(function (v) {
-                            
-
-                            var value = d3.sum(v, function (d) { return (d.Cropland); });
-                            return value/tots;
+                            return d3.mean(v, function (d) { return d["Biocapacity Deficit or Reserve"]; });
                         })
                         .entries(data)
-                    
+                    //.map(function (d) { return d.value; });
+
+                    console.log("groupData", groupData)
+
+
+
+                    y.domain([-6.5, 6.5]).range([height, 0]);
+                    //.rangeRoundBands([0, height], .2);
+                    //console.log(y)
+                    //y.domain(d3.extent(data, function (d) { return d["Biocapacity Deficit or Reserve"]; }));
+                    //y.domain(-4, 8);
+                    //var groubedByRegion=groupBy(data, 'Region')
+                    //console.log(groubedByRegion);
+
+                    // console.log(data["Middle East/Central Asia"][0]["HDI"]);
+
+
+                    var div = d3.select("body").append("div")
+                        .attr("class", "tooltip")
+                        .style("opacity", 0);
+
+
+
+
+
+
+                    //g.append("g")
+                    //.attr("class", "axis axis-y")
+                    //.call(d3.axisLeft(y).ticks(10).tickSize(8));
+
+
+                    g.selectAll(".bar")
+                        .data(groupData)
+                        .enter().append("rect")
+                        .attr("class", "bar")
+                        .attr("x", d => x(d.key))
+                        .attr("y", function (d) {
+                            if (d.value > 0) {
+                                return y(d.value);
+                            }
+                            else {
+                                return y(0);
+                            }
+                        })
+
+                        .attr("width", x.bandwidth())
+
+                        .attr("height", 0)
+                        .on('mouseover', function (d, i) {
+                            d3.select(this).transition()
+                                .duration('100')
+                                .attr("width", x.bandwidth() + 5)
+                                .attr("height", function (d) {
+                                    return Math.abs(y(d.value) - y(0)) + 3;
+                                })
+                                .style("opacity", 0.6);
+
+                            div.transition()
+                                .duration(100)
+                                .style("opacity", 1);
+                            var text = d.value;
+                            a = (text.toFixed(2));
+
+
+                            div.html(a)
+                                .style("left", (d3.event.pageX) + "px")
+                                .style("top", (d3.event.pageY - 28) + "px")
+                                .attr("fill", "black");
+
+                        })
+
+
+                        .on('mouseout', function (d, i) {
+                            d3.select(this).transition()
+                                .duration('200')
+                                .attr("width", x.bandwidth())
+                                .attr("height", function (d) {
+                                    return Math.abs(y(d.value) - y(0));
+                                })
+                                .style("opacity", 1);
+
+                            div.transition()
+                                .duration('200')
+                                .style("opacity", 0);
+                        })
+
+                        //.style("fill", "black")
+                        .style("fill", function (d, i) {
+
+
+
+                            if (d.key === "Middle East/Central Asia") {
+                                return "#ED553B";
+                            }
+
+                            else if (d.key === "Africa") {
+                                return "slateblue";
+                            }
+
+                            else if (d.key === "Asia-Pacific") {
+                                return "#85144B";
+                            }
+                            else if (d.key === "European Union") {
+                                return "#20639B";
+                            }
+                            else if (d.key === "Latin America") {
+                                return "#ff81fc";
+                            }
+                            else if (d.key === "North America") {
+                                return " YELLOW";
+                            }
+                            else if (d.key === "Northern/Eastern Europe") {
+                                return "#3D9970";
+                            }
+
+
+
+                            else {
+                                return "black";
+
+                            }
+                        });
+                    g.selectAll(".bar")
+                        .transition()
+                        .duration(2700)
+                        .attr("y", function (d) {
+                            if (d.value > 0) {
+                                return y(d.value);
+                            }
+                            else {
+                                return y(0);
+                            }
+                        })
+                        .attr("height", function (d) {
+                            return Math.abs(y(d.value) - y(0));
+                        })
+                        .delay(function (d, i) { return i * 20; });
+
+                    g.append("g")
+                        .attr("class", "axis axis-x")
+                        .attr('transform', 'translate(0,' + (height / 2) + ')')
+                        .call(d3.axisBottom(x));
+                    //.style('fill', (d,i)=> rainbow(i));
+                    //.attr("fill", (d,i) => rainbow(i));
+                })
+                    .catch(err => {
+                        svg.append("text")
+                            .attr("y", 20)
+                            .attr("text-anchor", "left")
+                            .style("font-size", "20px")
+                            .style("font-weight", "bold")
+                            .text(`Couldn't open the data file: "${err}".`);
+                    });
+            }
+            if (option === '4') {
+
+                d3.select("#first").remove();
+                d3.select("#second").remove();
+                d3.select("#third").remove();
+                d3.select("#fourth").remove();
+                d3.select("#fifth").remove();
+
+                contenttext = '<div style="box-sizing: border-box;  padding-left: 200px; display:block;;">' +
+                    " <H2><hr>" +
+                    "Question How each region impacts Ecology?" + "</H2> " +
+                    "<h3>" + "Comment: Region % to Total Ecological Footprint" + "" + "</h3>" + "</div>";
+                document.getElementById("content").innerHTML = contenttext;
+
+                legendtext = "<hr>" +
+
+                    '<div class="legend1" style="box-sizing: border-box;  text-align: right; padding-right: 270px; display:block;;">' +
+                    '            ' + "" + "</div>";
+
+                document.getElementById("legend").innerHTML = legendtext;
+
+
+
+                const svg = d3.select("svg"),
+
+                    margin = { top: 20, right: 20, bottom: 30, left: 50 },
+                    width = +svg.attr("width") - margin.left - margin.right,
+                    height = +svg.attr("height") - margin.top - margin.bottom,
+                    x = d3.scaleBand().rangeRound([0, width]).padding(0.2),
+                    y = d3.scaleLinear().rangeRound([height, 0]),
+
+                    g = svg.append("g")
+                        .attr("transform", `translate(${margin.left},${margin.top})`)
+                        .attr("id", "fourth");
+
+                d3.json("https://raw.githubusercontent.com/tanyajoon/Visualization/master/csv.json").then(data => {
+                    data = data;
+                    //var rainbow = d3.scaleSequential(d3.interpolateRainbow).domain([0,d3.sum(data, d => 1)]);
+                    //HDIbyRegion = d3.rollup(data, d => d.sport);
+                    x.domain(data.map(d => d.Region));
+
+                    var z = d3.scaleOrdinal()
+                    z.domain(data.map(function (d) { return d.Region; }))
+                    var keys = z.domain()
+                    var tots = d3.sum(data, function (d) { return d["Total Ecological Footprint"]; });
+                    y.domain([0, 1]);
+                    var groupData = d3.nest()
+
+                        .key(function (d) { return d.Region; })
+
+                        .rollup(function (v) {
+
+
+                            var value = d3.sum(v, function (d) { return d["Total Ecological Footprint"]; });
+                            return value / tots;
+                        })
+                        .entries(data)
+
 
                     console.log("groupData", groupData)
 
@@ -705,8 +827,8 @@
                         .call(d3.axisBottom(x));
 
                     //g.append("g")
-                        //.attr("class", "axis axis-y")
-                        //.call(d3.axisLeft(y).ticks(10).tickSize(8));
+                    //.attr("class", "axis axis-y")
+                    //.call(d3.axisLeft(y).ticks(10).tickSize(8));
 
 
                     g.selectAll(".bar")
@@ -716,18 +838,21 @@
                         .attr("x", d => x(d.key))
                         .attr("y", d => y(d.value))
                         .attr("width", x.bandwidth())
-                        .attr("height", d => height - y(d.value))
+                        .attr("height", 0)
                         .on('mouseover', function (d, i) {
                             d3.select(this).transition()
                                 .duration('100')
+                                .attr("width", x.bandwidth() + 5)
+                                .attr("height", d => height - y(d.value) + 2)
+
 
                             div.transition()
                                 .duration(100)
                                 .style("opacity", 1)
-                                
+
                             var text = d.value;
                             b = text * 100;
-                            a = (b.toFixed(2))+"%";
+                            a = (b.toFixed(2)) + "%";
 
 
                             div.html(a)
@@ -741,11 +866,22 @@
                         .on('mouseout', function (d, i) {
                             d3.select(this).transition()
                                 .duration('200')
+                                .attr("width", x.bandwidth())
+                                .attr("height", d => height - y(d.value))
 
                             div.transition()
                                 .duration('200')
                                 .style("opacity", 0);
                         })
+
+                    g.selectAll(".bar")
+                        .transition()
+                        .duration(2700)
+                        .attr("y", d => y(d.value))
+                        .attr("height", d => height - y(d.value))
+                        .delay(function (d, i) { return i * 20; });
+
+
 
                 })
                     .catch(err => {
@@ -758,28 +894,28 @@
                     });
             }
             if (option === '5') {
-                
+
                 d3.select("#first").remove();
                 d3.select("#second").remove();
-                d3.select("#third").remove(); 
+                d3.select("#third").remove();
                 d3.select("#fourth").remove();
                 d3.select("#fifth").remove();
 
 
-                contenttext = '<div style="box-sizing: border-box;  padding-left: 200px; display:block;;">' +               
-                    "<b> <H2><hr>" +
-                    "Question How each region contributes to cropland?" + "</H2></b > " +
-                    "<h3><b>" + "Comment: Region % to whole cropland" + "</b>"+"</h3>"+ "</div>";
+                contenttext = '<div style="box-sizing: border-box;  padding-left: 200px; display:block;;">' +
+                    " <H2><hr>" +
+                    "Question How does each region contributes to resources?" + "</H2> " +
+                    "<h3>" + "Comment: Region wise distribution of resources" + "" + "</h3>" + "</div>";
                 document.getElementById("content").innerHTML = contenttext;
 
-                legendtext = "<hr>"+
+                legendtext = "<hr>" +
 
-                    '<div class="legend1" style="box-sizing: border-box;  text-align: right; padding-right: 300px; display:block;;">' +
-                    '            ' +""+ "</div>";
-                    
+                    '<div class="legend1" style="box-sizing: border-box;  text-align: right; padding-right: 270px; display:block;;">' +
+                    '            ' + "" + "</div>";
+
                 document.getElementById("legend").innerHTML = legendtext;
 
-               
+
 
                 const svg = d3.select("svg"),
 
@@ -787,299 +923,310 @@
                     width = +svg.attr("width") - margin.left - margin.right,
                     height = +svg.attr("height") - margin.top - margin.bottom,
                     barPadding = .2,
-                    axisTicks = {qty: 5, outerSize: 0, dateFormat: '%m-%d'},
+                    axisTicks = { qty: 5, outerSize: 0, dateFormat: '%m-%d' },
 
                     xScale0 = d3.scaleBand().range([0, width - margin.left - margin.right]).padding(barPadding)
-                    xScale1 = d3.scaleBand()
+                xScale1 = d3.scaleBand()
 
 
 
-			        yScale = d3.scaleLinear().range([height - margin.top - margin.bottom, 0])
-			        xAxis = d3.axisBottom(xScale0).tickSizeOuter(axisTicks.outerSize);
-			        yAxis = d3.axisLeft(yScale).ticks(axisTicks.qty).tickSizeOuter(axisTicks.outerSize);
-                    g = svg.append("g")
-                        .attr("transform", `translate(${margin.left},${margin.top})`)
-                        .attr("id", "fifth");
-                    
+                yScale = d3.scaleLinear().range([height - margin.top - margin.bottom, 0])
+                xAxis = d3.axisBottom(xScale0).tickSizeOuter(axisTicks.outerSize);
+                yAxis = d3.axisLeft(yScale).ticks(axisTicks.qty).tickSizeOuter(axisTicks.outerSize);
+                g = svg.append("g")
+                    .attr("transform", `translate(${margin.left},${margin.top})`)
+                    .attr("id", "fifth");
+
 
                 d3.json("https://raw.githubusercontent.com/tanyajoon/Visualization/master/region.json").then(data => {
                     data = data;
                     xScale0.domain(data.map(d => d.Region))
                     xScale1.domain(["Cropland", "Grazing Land", "Forest Land", "Fishing Water", "Urban Land"]).range([0, xScale0.bandwidth()])
-                    yScale.domain([0, d3.max(data, function (d) {
+                    yScale.domain([0, 80
+                        //d3.max(data, function (d) {
 
                         //if (d.Cropland > d["Forest Land"] && d.Cropland > d["Grazing Land"] && d.Cropland > d["Urban Land"])
                         //    b = d.Cropland;
                         //else
                         //    b = d["Urban Land"];
 
-                        return d["Fishing Water"];
+                        //return d["Fishing Water"];
 
-                    })
+                        //})
 
 
                     ])
 
-                    legendtext = "<hr>"+
+                    legendtext = "<hr>" +
 
-                    '<div class="legend1" style="box-sizing: border-box;  text-align: right; padding-right: 300px; display:block;;">' +
-                    '            ' +
-                    '                ' +
-                    '                <div class="legend1"> <p class="country-name"><span class="key-dot bar1"></span>Cropland</p> </div>' +
-                    '                <div class="legend1"> <p class="country-name"><span class="key-dot bar2"></span>Grazing Land</p> </div>' +
-                    '                <div class="legend1"> <p class="country-name"><span class="key-dot bar3"></span>Forest Land</p> </div>' +
-                    '           ' +
-                    '                <div class="legend1"> <p class="country-name"><span class="key-dot bar4"></span>Fishing Water</p> </div>' +
-                    '                <div class="legend1"> <p class="country-name"><span class="key-dot bar5"></span>Urban Land</p> </div>' +
-                    
-                    
-                    '           ' + "</div>";
-                    
-                document.getElementById("legend").innerHTML = legendtext;
-                   var Country = g.selectAll(".Region")
-  			        .data(data)
-  			        .enter().append("g")
-                               .attr("class", "Region")
-                               .attr("transform", d => `translate(${xScale0(d.Region)},0)`);
+                        '<div class="legend1" style="box-sizing: border-box;  text-align: right; padding-right: 270px; display:block;;">' +
+                        '            ' +
+                        '                ' +
+                        '                <div class="legend1"> <p class="country-name"><span class="key-dot bar1"></span>Cropland</p> </div>' +
+                        '                <div class="legend1"> <p class="country-name"><span class="key-dot bar2"></span>Grazing Land</p> </div>' +
+                        '                <div class="legend1"> <p class="country-name"><span class="key-dot bar3"></span>Forest Land</p> </div>' +
+                        '           ' +
+                        '                <div class="legend1"> <p class="country-name"><span class="key-dot bar4"></span>Fishing Water</p> </div>' +
+                        '                <div class="legend1"> <p class="country-name"><span class="key-dot bar5"></span>Urban Land</p> </div>' +
+
+
+                        '           ' + "</div>";
+
+                    document.getElementById("legend").innerHTML = legendtext;
+                    var Country = g.selectAll(".Region")
+                        .data(data)
+                        .enter().append("g")
+                        .attr("class", "Region")
+                        .attr("transform", d => `translate(${xScale0(d.Region)},0)`);
 
                     var div = d3.select("body").append("div")
-                            .attr("class", "tooltip")
-                            .style("opacity", 0);
+                        .attr("class", "tooltip")
+                        .style("opacity", 0);
 
-  			        /* Add field1 bars */
-			        Country.selectAll(".bar.field1")
-			          .data(d => [d])
-			          .enter()
-			          .append("rect")
-			          .attr("class", "bar field1")
-			          .style("fill","blue")
-			          .attr("x", d => xScale1('Cropland'))
-			          .attr("width", xScale1.bandwidth())
-			          .attr("height", d => {
-                                    return height - margin.top - margin.bottom - yScale(0)
-                                })
-                      .attr("y", d => yScale(0))
-                      .on('mouseover', function (d, i) {
-                                d3.select(this).transition()
-                                    .duration('100')
-                                    .attr("r", 10);
-                                div.transition()
-                                    .duration(100)
-                                    .style("opacity", 1);
-                                var text = d["Cropland"];
-                                div.html(text)
-                                    .style("left", (d3.event.pageX) + "px")
-                                    .style("top", (d3.event.pageY - 28) + "px")
-                                    .attr("fill", "black");
+                    /* Add Cropland field bars */
+                    Country.selectAll(".bar.field1")
+                        .data(d => [d])
+                        .enter()
+                        .append("rect")
+                        .attr("class", "bar field1")
+                        .style("fill", "#20639B")
+                        .attr("x", d => xScale1('Cropland'))
+                        .attr("width", xScale1.bandwidth())
+                        .attr("height", d => {
+                            return height - margin.top - margin.bottom - yScale(0)
+                        })
+                        .attr("y", d => yScale(0))
+                        .on('mouseover', function (d, i) {
+                            d3.select(this).transition()
+                                .duration('100')
+                                .style("opacity", 0.6);
+                            div.transition()
+                                .duration(100)
+                                .style("opacity", 1);
+                            var text = d["Cropland"];
+                            div.html(text)
+                                .style("left", (d3.event.pageX) + "px")
+                                .style("top", (d3.event.pageY - 28) + "px")
+                                .attr("fill", "black");
 
-                            })
+                        })
                         .on('mouseout', function (d, i) {
                             d3.select(this).transition()
                                 .duration('200')
+                                .style("opacity", 1);
 
                             div.transition()
                                 .duration('200')
                                 .style("opacity", 0);
                         });
-                      
-                      // Animation
-                      Country.selectAll(".bar.field1")
-                       .transition()
-                       .duration(1000)
-                       .attr("y", d => { return yScale(d["Cropland"])})
-                       .attr("height",d => {
-                                    return height - margin.top - margin.bottom - yScale(d["Cropland"])
-                                } )
-                       .delay(function(d,i) {return i*100;});
-			  
-			        /* Add field2 bars */
-                       Country.selectAll(".bar.field2")
-                                .data(d => [d])
-                                .enter()
-                                .append("rect")
-                                .attr("class", "bar field2")
-                                .style("fill", "red")
-                                .attr("x", d => xScale1('Forest Land'))
-                                .attr("y", d => yScale(0))
-                                .attr("width", xScale1.bandwidth())
-                                .attr("height", d => {
-                                    return height - margin.top - margin.bottom - yScale(0)
-                                })
-                                .on('mouseover', function (d, i) {
-                                d3.select(this).transition()
-                                    .duration('100')
-                                    .attr("r", 10);
-                                div.transition()
-                                    .duration(100)
-                                    .style("opacity", 1);
-                                var text = d["Forest Land"];
-                                div.html(text)
-                                    .style("left", (d3.event.pageX) + "px")
-                                    .style("top", (d3.event.pageY - 28) + "px")
-                                    .attr("fill", "black");
 
-                            })
-                            .on('mouseout', function (d, i) {
-                                d3.select(this).transition()
-                                    .duration('200')
-    
-                                    div.transition()
-                                        .duration('200')
-                                        .style("opacity", 0);
-                            });
+                    // Animation
+                    Country.selectAll(".bar.field1")
+                        .transition()
+                        .duration(1000)
+                        .attr("y", d => { return yScale(d["Cropland"]) })
+                        .attr("height", d => {
+                            return height - margin.top - margin.bottom - yScale(d["Cropland"])
+                        })
+                        .delay(function (d, i) { return i * 100; });
 
-                    //Animation 
+                    /* Add Forest Land field2 bars */
                     Country.selectAll(".bar.field2")
-                       .transition()
-                       .duration(3000)
-                       .attr("y", d => { return yScale(d["Forest Land"])})
-                       .attr("height",d => {
-                                    return height - margin.top - margin.bottom - yScale(d["Forest Land"])
-                                } )
-                       .delay(function(d,i) {return i*100;});
+                        .data(d => [d])
+                        .enter()
+                        .append("rect")
+                        .attr("class", "bar field2")
+                        .style("fill", "#ED553B")
+                        .attr("x", d => xScale1('Forest Land'))
+                        .attr("y", d => yScale(0))
+                        .attr("width", xScale1.bandwidth())
+                        .attr("height", d => {
+                            return height - margin.top - margin.bottom - yScale(0)
+                        })
+                        .on('mouseover', function (d, i) {
+                            d3.select(this).transition()
+                                .duration('100')
+                                .style("opacity", 0.6);
+                            div.transition()
+                                .duration(100)
+                                .style("opacity", 1);
+                            var text = d["Forest Land"];
+                            div.html(text)
+                                .style("left", (d3.event.pageX) + "px")
+                                .style("top", (d3.event.pageY - 28) + "px")
+                                .attr("fill", "black");
+
+                        })
+                        .on('mouseout', function (d, i) {
+                            d3.select(this).transition()
+                                .duration('200')
+                                .style("opacity", 1);
+
+                            div.transition()
+                                .duration('200')
+                                .style("opacity", 0);
+                        });
+
+                    //Animation
+                    Country.selectAll(".bar.field2")
+                        .transition()
+                        .duration(2700)
+                        .attr("y", d => { return yScale(d["Forest Land"]) })
+                        .attr("height", d => {
+                            return height - margin.top - margin.bottom - yScale(d["Forest Land"])
+                        })
+                        .delay(function (d, i) { return i * 100; });
                     /* Add field3 bars */
-                      Country.selectAll(".bar.field3")
-                                .data(d => [d])
-                                .enter()
-                                .append("rect")
-                                .attr("class", "bar field3")
-                                .style("fill", "green")
-                                .attr("x", d => xScale1("Grazing Land"))
-                                .attr("y", d => yScale(0))
-                                .attr("width", xScale1.bandwidth())
-                                .attr("height", d => {
-                                    return height - margin.top - margin.bottom - yScale(0)
-                                })
-                                .on('mouseover', function (d, i) {
-                                d3.select(this).transition()
-                                    .duration('100')
-                                    .attr("r", 10);
-                                div.transition()
-                                    .duration(100)
-                                    .style("opacity", 1);
-                                var text = d["Grazing Land"];
-                                div.html(text)
-                                    .style("left", (d3.event.pageX) + "px")
-                                    .style("top", (d3.event.pageY - 28) + "px")
-                                    .attr("fill", "black");
+                    Country.selectAll(".bar.field3")
+                        .data(d => [d])
+                        .enter()
+                        .append("rect")
+                        .attr("class", "bar field3")
+                        .style("fill", "#39CCCC")
+                        .attr("x", d => xScale1("Grazing Land"))
+                        .attr("y", d => yScale(0))
+                        .attr("width", xScale1.bandwidth())
+                        .attr("height", d => {
+                            return height - margin.top - margin.bottom - yScale(0)
+                        })
+                        .on('mouseover', function (d, i) {
+                            d3.select(this).transition()
+                                .duration('100')
+                                .style("opacity", 0.6)
 
-                            })
-                            .on('mouseout', function (d, i) {
-                                d3.select(this).transition()
-                                    .duration('200')
-    
-                                    div.transition()
-                                        .duration('200')
-                                        .style("opacity", 0);
-                            });
+                            div.transition()
+                                .duration(100)
+                                .style("opacity", 1);
+                            var text = d["Grazing Land"];
+                            div.html(text)
+                                .style("left", (d3.event.pageX) + "px")
+                                .style("top", (d3.event.pageY - 28) + "px")
+                                .attr("fill", "black");
 
-                        //Animation 
-                        Country.selectAll(".bar.field3")
-                       .transition()
-                       .duration(2000)
-                       .attr("y", d => { return yScale(d["Grazing Land"])})
-                       .attr("height",d => {
-                                    return height - margin.top - margin.bottom - yScale(d["Grazing Land"])
-                                } )
-                       .delay(function(d,i) {return i*100;});
-                       /* Add field4 bars */
-                      Country.selectAll(".bar.field4")
-                                .data(d => [d])
-                                .enter()
-                                .append("rect")
-                                .attr("class", "bar field4")
-                                .style("fill", "yellow")
-                                .attr("x", d => xScale1('Fishing Water'))
-                                .attr("y", d => yScale(0))
-                                .attr("width", xScale1.bandwidth())
-                                .attr("height", d => {
-                                    return height - margin.top - margin.bottom - yScale(0)
-                                })
-                                .on('mouseover', function (d, i) {
-                                d3.select(this).transition()
-                                    .duration('100')
-                                    .attr("r", 10);
-                                div.transition()
-                                    .duration(100)
-                                    .style("opacity", 1);
-                                var text = d["Fishing Water"];
-                                div.html(text)
-                                    .style("left", (d3.event.pageX) + "px")
-                                    .style("top", (d3.event.pageY - 28) + "px")
-                                    .attr("fill", "black");
+                        })
+                        .on('mouseout', function (d, i) {
+                            d3.select(this).transition()
+                                .duration('200')
+                                .style("opacity", 1)
 
-                            })
-                            .on('mouseout', function (d, i) {
-                                d3.select(this).transition()
-                                    .duration('200')
-    
-                                    div.transition()
-                                        .duration('200')
-                                        .style("opacity", 0);
-                            });
+                            div.transition()
+                                .duration('200')
+                                .style("opacity", 0);
+                        });
 
-                        //Animation 
-                        Country.selectAll(".bar.field4")
-                       .transition()
-                       .duration(4000)
-                       .attr("y", d => { return yScale(d["Fishing Water"])})
-                       .attr("height",d => {
-                                    return height - margin.top - margin.bottom - yScale(d["Fishing Water"])
-                                } )
-                       .delay(function(d,i) {return i*100;});
-                        /* Add field5 bars */
-                      Country.selectAll(".bar.field5")
-                                .data(d => [d])
-                                .enter()
-                                .append("rect")
-                                .attr("class", "bar field5")
-                                .style("fill", "black")
-                                .attr("x", d => xScale1('Urban Land'))
-                                .attr("y", d => yScale(0))
-                                .attr("width", xScale1.bandwidth())
-                                .attr("height", d => {
-                                    return height - margin.top - margin.bottom - yScale(0)
-                                })
-                                .on('mouseover', function (d, i) {
-                                d3.select(this).transition()
-                                    .duration('100')
-                                    .attr("r", 10);
-                                div.transition()
-                                    .duration(100)
-                                    .style("opacity", 1);
-                                var text = d["Urban Land"];
-                                div.html(text)
-                                    .style("left", (d3.event.pageX) + "px")
-                                    .style("top", (d3.event.pageY - 28) + "px")
-                                    .attr("fill", "black");
+                    //Animation
+                    Country.selectAll(".bar.field3")
+                        .transition()
+                        .duration(2000)
+                        .attr("y", d => { return yScale(d["Grazing Land"]) })
+                        .attr("height", d => {
+                            return height - margin.top - margin.bottom - yScale(d["Grazing Land"])
+                        })
+                        .delay(function (d, i) { return i * 100; });
+                    /* Add field4 bars */
+                    Country.selectAll(".bar.field4")
+                        .data(d => [d])
+                        .enter()
+                        .append("rect")
+                        .attr("class", "bar field4")
+                        .style("fill", "#85144B")
+                        .attr("x", d => xScale1('Fishing Water'))
+                        .attr("y", d => yScale(0))
+                        .attr("width", xScale1.bandwidth())
+                        .attr("height", d => {
+                            return height - margin.top - margin.bottom - yScale(0)
+                        })
+                        .on('mouseover', function (d, i) {
+                            d3.select(this).transition()
+                                .duration('100')
+                                .style("opacity", 0.6)
+                            div.transition()
+                                .duration(100)
+                                .style("opacity", 1);
+                            var text = d["Fishing Water"];
+                            div.html(text)
+                                .style("left", (d3.event.pageX) + "px")
+                                .style("top", (d3.event.pageY - 28) + "px")
+                                .attr("fill", "black");
 
-                            })
-                            .on('mouseout', function (d, i) {
-                                d3.select(this).transition()
-                                    .duration('200')
-    
-                                    div.transition()
-                                        .duration('200')
-                                        .style("opacity", 0);
-                            });
+                        })
+                        .on('mouseout', function (d, i) {
+                            d3.select(this).transition()
+                                .duration('200')
+                                .style("opacity", 1)
 
-                        //Animation 
-                        Country.selectAll(".bar.field5")
-                       .transition()
-                       .duration(5000)
-                       .attr("y", d => { return yScale(d["Urban Land"])})
-                       .attr("height",d => {
-                                    return height - margin.top - margin.bottom - yScale(d["Urban Land"])
-                                } )
-                       .delay(function(d,i) {return i*100;});
+                            div.transition()
+                                .duration('200')
+                                .style("opacity", 0);
+                        });
+
+                    //Animation
+                    Country.selectAll(".bar.field4")
+                        .transition()
+                        .duration(4000)
+                        .attr("y", d => { return yScale(d["Fishing Water"]) })
+                        .attr("height", d => {
+                            return height - margin.top - margin.bottom - yScale(d["Fishing Water"])
+                        })
+                        .delay(function (d, i) { return i * 100; });
+                    /* Add field5 bars */
+                    Country.selectAll(".bar.field5")
+                        .data(d => [d])
+                        .enter()
+                        .append("rect")
+                        .attr("class", "bar field5")
+                        .style("fill", "#3D9970")
+                        .attr("x", d => xScale1('Urban Land'))
+                        .attr("y", d => yScale(0))
+                        .attr("width", xScale1.bandwidth())
+                        .attr("height", d => {
+                            return height - margin.top - margin.bottom - yScale(0)
+                        })
+                        .on('mouseover', function (d, i) {
+                            d3.select(this).transition()
+                                .duration('100')
+                                .style("opacity", 0.6)
+                            div.transition()
+                                .duration(100)
+                                .style("opacity", 1);
+                            var text = d["Urban Land"];
+                            div.html(text)
+                                .style("left", (d3.event.pageX) + "px")
+                                .style("top", (d3.event.pageY - 28) + "px")
+                                .attr("fill", "black");
+
+                        })
+
+                        .on('mouseout', function (d, i) {
+                            d3.select(this).transition()
+                                .duration('200')
+                                .style("opacity", 1)
+
+                            div.transition()
+                                .duration('200')
+                                .style("opacity", 0);
+                        });
+
+
+                    //Animation
+                    Country.selectAll(".bar.field5")
+                        .transition()
+                        .duration(5000)
+                        .attr("y", d => { return yScale(d["Urban Land"]) })
+                        .attr("height", d => {
+                            return height - margin.top - margin.bottom - yScale(d["Urban Land"])
+                        })
+                        .delay(function (d, i) { return i * 100; });
                     g.append("g")
-			             .attr("class", "x axis")
-			             .attr("transform", `translate(0 , ${height - margin.top-margin.bottom})`)
-			             .call(xAxis);
-			        // Add the Y Axis
-			        g.append("g")
-			             .attr("class", "y axis")
-			             .call(yAxis);
+                        .attr("class", "x axis")
+                        .attr("transform", `translate(0 , ${height - margin.top - margin.bottom})`)
+
+
+                        .call(xAxis);
+                    // Add the Y Axis
+                    g.append("g")
+                        .attr("class", "y axis")
+                        .call(yAxis);
 
 
                 })
@@ -1094,37 +1241,45 @@
             }
         }
     </script>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <title>Visualization</title>
 </head>
+
 <body>
     <div id="side_panel" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 
-        <a href="new_trial6.html">Main Page</a>
-        <a onclick="Draw('1')"> Total Ecological Footprint & HDI </a>
-        <a onclick="Draw('4')"> Total Ecological Footprint & GDP per Capita </a>
-        <a onclick="Draw('2')"> Region & HDI </a>
-        <a onclick="Draw('3')"> Region & Forestland </a>
-        <a onclick="Draw('5')"> Region &  </a>
+        <a href="main.html">Main Page</a>
+        <p></p>
+
+
+        <p></p>
+
+        <a onclick="Draw('1')"> <h5>Ecological Footprint & HDI</h5> </a>
+        <a onclick="Draw('2')"> <h5>Ecological Footprint & GDP per Capita</h5> </a>
+        <a onclick="Draw('3')"> <h5>Region & BioCapacity </h5></a>
+        <a onclick="Draw('4')"> <h5>Region & Ecological Footprint</h5> </a>
+        <a onclick="Draw('5')"> <h5>Region & Resources</h5></a>
 
 
     </div>
     <div><span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; </span></div>
     <div class="vl" style="float:left;display:inline-block ;"></div>
     <div id="canvas" style="float:left;display:inline-block ;">
-        
+
 
         <center><svg width="1000" height="500"></svg></center>
 
-        <div id="content" style="float:left; display:inline-block ;">
-            <center><H1>This is the page that has some corelations</H1></center>
+        <div id="content" style="float:left; display:inline-block ;" class="content">
+
         </div>
     </div>
-        <div id="legend" style="float:right; display:inline-block ;">
-            <center><H1>This is the page that has some corelations</H1></center>
-        </div>
-    
+    <div id="legend" style="float:right; display:inline-block ;" class="legend">
 
-    <div class="tooltip"></div>
+    </div>
+
+
+    <div class="tooltip" style="display:none;"></div>
 </body>
 
 </html>
