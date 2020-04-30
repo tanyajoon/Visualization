@@ -12,5 +12,5 @@ Hovering over the points plotted would display some information as well.
 The main page can be accessed again through the “Main Page” link. 
 ```
  
-All of our visualizations are based on the data from Kaggle: Ecological footprint and Natural Earth, the GEOJSON data is combined and hosted on Github. It can be accessed at “​https://raw.githubusercontent.com/tanyajoon/Visualization/​”  
+All of our visualizations are based on the data from Kaggle: Ecological footprint and Natural Earth, the GEOJSON data is combined and hosted on Github.
  
